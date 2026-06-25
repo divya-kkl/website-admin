@@ -30,6 +30,7 @@ const GET_ALL_PRODUCTS = gql`
         size
         stock
       }
+      isFeatured
       description
       material
       embellishment
@@ -94,7 +95,7 @@ const ADD_PRODUCT_SIZE = gql`
 function Product() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -106,7 +107,7 @@ function Product() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
-  
+
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [viewModalProduct, setViewModalProduct] = useState(null);
 
@@ -134,7 +135,8 @@ function Product() {
     closure: '',
     lining: '',
     washCare: '',
-    ironCare: ''
+    ironCare: '',
+    isFeatured: false
   });
 
   const fetchData = async () => {
@@ -215,7 +217,7 @@ function Product() {
         brand: product.brand || '',
         productCategoriesID: product.productCategoriesID || '',
         productCategoriesCode: product.productCategoriesCode || '',
-        variants: product.variants ? product.variants.map(v => ({...v})) : [],
+        variants: product.variants ? product.variants.map(v => ({ ...v })) : [],
         description: product.description || '',
         material: product.material || '',
         embellishment: product.embellishment || '',
@@ -224,7 +226,8 @@ function Product() {
         closure: product.closure || '',
         lining: product.lining || '',
         washCare: product.washCare || '',
-        ironCare: product.ironCare || ''
+        ironCare: product.ironCare || '',
+        isFeatured: product.isFeatured || false
       });
     } else {
       setEditingProduct(null);
@@ -246,7 +249,8 @@ function Product() {
         closure: '',
         lining: '',
         washCare: '',
-        ironCare: ''
+        ironCare: '',
+        isFeatured: false
       });
     }
     setIsModalOpen(true);
@@ -327,7 +331,8 @@ function Product() {
       closure: formData.closure,
       lining: formData.lining,
       washCare: formData.washCare,
-      ironCare: formData.ironCare
+      ironCare: formData.ironCare,
+      isFeatured: formData.isFeatured
     };
 
     try {
@@ -429,10 +434,10 @@ function Product() {
         <div className="prod-header">
           <h2>Products List</h2>
           <div className="header-actions">
-            <input 
-              type="text" 
-              className="search-input" 
-              placeholder="Search products..." 
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -485,7 +490,7 @@ function Product() {
                   <td style={{ textDecoration: 'line-through', color: '#858796' }}>₹{prod.mrp}</td>
                   <td>{formatDateTime(prod.createdAt)}</td>
                   <td className="relative-cell">
-                    <button 
+                    <button
                       className="action-btn"
                       onClick={() => setOpenDropdownId(openDropdownId === prod.id ? null : prod.id)}
                     >
@@ -547,7 +552,7 @@ function Product() {
               <h2>Product Details</h2>
               <button className="btn-close" onClick={() => setViewModalProduct(null)}>&times;</button>
             </div>
-            
+
             <div className="modal-body scrollable-body">
               <div className="view-images">
                 {viewModalProduct.images?.map((img, i) => (
@@ -615,18 +620,24 @@ function Product() {
               <h2>{editingProduct ? "Edit Product" : "Add New Product"}</h2>
               <button className="btn-close" onClick={handleCloseModal}>&times;</button>
             </div>
-            
+
             <form onSubmit={handleSave} className="modal-body scrollable-body">
               <div className="form-section">
                 <h3>Basic Information</h3>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Product Name *</label>
-                    <input type="text" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="E.g. Cotton T-Shirt" />
+                    <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="E.g. Cotton T-Shirt" />
                   </div>
                   <div className="form-group">
                     <label>Brand *</label>
                     <input type="text" required value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})} placeholder="E.g. Nike" />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})} id="isFeatured" />
+                    <label htmlFor="isFeatured" style={{ marginBottom: 0, cursor: 'pointer' }}>Featured Product</label>
                   </div>
                 </div>
                 <div className="form-row">
@@ -642,7 +653,7 @@ function Product() {
                 </div>
                 <div className="form-group">
                   <label>Description</label>
-                  <textarea rows="3" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} placeholder="Product description..."></textarea>
+                  <textarea rows="3" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Product description..."></textarea>
                 </div>
               </div>
 
@@ -651,15 +662,15 @@ function Product() {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Price (₹) *</label>
-                    <input type="number" required value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} />
+                    <input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label>MRP (₹) *</label>
-                    <input type="number" required value={formData.mrp} onChange={(e) => setFormData({...formData, mrp: e.target.value})} />
+                    <input type="number" required value={formData.mrp} onChange={(e) => setFormData({ ...formData, mrp: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label>Discount (%)</label>
-                    <input type="number" value={formData.discountPercentage} onChange={(e) => setFormData({...formData, discountPercentage: e.target.value})} />
+                    <input type="number" value={formData.discountPercentage} onChange={(e) => setFormData({ ...formData, discountPercentage: e.target.value })} />
                   </div>
                 </div>
               </div>
@@ -669,7 +680,7 @@ function Product() {
                 <div className="image-upload-wrapper">
                   <input type="file" multiple accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} className="file-input" />
                   {uploadingImage && <span className="upload-text">Uploading images...</span>}
-                  
+
                   <div className="uploaded-images-container">
                     {formData.images.map((img, index) => (
                       <div key={index} className="uploaded-image-box">
@@ -714,39 +725,39 @@ function Product() {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Material</label>
-                    <input type="text" value={formData.material} onChange={(e) => setFormData({...formData, material: e.target.value})} />
+                    <input type="text" value={formData.material} onChange={(e) => setFormData({ ...formData, material: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label>Embellishment</label>
-                    <input type="text" value={formData.embellishment} onChange={(e) => setFormData({...formData, embellishment: e.target.value})} />
+                    <input type="text" value={formData.embellishment} onChange={(e) => setFormData({ ...formData, embellishment: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label>Neck</label>
-                    <input type="text" value={formData.neck} onChange={(e) => setFormData({...formData, neck: e.target.value})} />
+                    <input type="text" value={formData.neck} onChange={(e) => setFormData({ ...formData, neck: e.target.value })} />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Sleeves</label>
-                    <input type="text" value={formData.sleeves} onChange={(e) => setFormData({...formData, sleeves: e.target.value})} />
+                    <input type="text" value={formData.sleeves} onChange={(e) => setFormData({ ...formData, sleeves: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label>Closure</label>
-                    <input type="text" value={formData.closure} onChange={(e) => setFormData({...formData, closure: e.target.value})} />
+                    <input type="text" value={formData.closure} onChange={(e) => setFormData({ ...formData, closure: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label>Lining</label>
-                    <input type="text" value={formData.lining} onChange={(e) => setFormData({...formData, lining: e.target.value})} />
+                    <input type="text" value={formData.lining} onChange={(e) => setFormData({ ...formData, lining: e.target.value })} />
                   </div>
                 </div>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Wash Care</label>
-                    <input type="text" value={formData.washCare} onChange={(e) => setFormData({...formData, washCare: e.target.value})} />
+                    <input type="text" value={formData.washCare} onChange={(e) => setFormData({ ...formData, washCare: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label>Iron Care</label>
-                    <input type="text" value={formData.ironCare} onChange={(e) => setFormData({...formData, ironCare: e.target.value})} />
+                    <input type="text" value={formData.ironCare} onChange={(e) => setFormData({ ...formData, ironCare: e.target.value })} />
                   </div>
                 </div>
               </div>
@@ -772,44 +783,44 @@ function Product() {
               <h2>Quick Add Size</h2>
               <button className="btn-close" onClick={closeAddSizeModal}>&times;</button>
             </div>
-            
+
             <form onSubmit={handleAddSizeSubmit} className="modal-body scrollable-body" style={{ maxHeight: 'calc(100vh - 120px)' }}>
               <div className="form-section">
                 <h3>Size Details</h3>
                 <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
                   <div className="form-group">
                     <label>Color *</label>
-                    <input 
-                      type="text" 
-                      value={addSizeFormData.color} 
-                      onChange={e => setAddSizeFormData(prev => ({...prev, color: e.target.value}))} 
-                      required 
+                    <input
+                      type="text"
+                      value={addSizeFormData.color}
+                      onChange={e => setAddSizeFormData(prev => ({ ...prev, color: e.target.value }))}
+                      required
                       placeholder="e.g. Red, Blue, etc."
                     />
                   </div>
                   <div className="form-group">
                     <label>Size *</label>
-                    <input 
-                      type="text" 
-                      value={addSizeFormData.size} 
-                      onChange={e => setAddSizeFormData(prev => ({...prev, size: e.target.value}))} 
-                      required 
+                    <input
+                      type="text"
+                      value={addSizeFormData.size}
+                      onChange={e => setAddSizeFormData(prev => ({ ...prev, size: e.target.value }))}
+                      required
                       placeholder="e.g. M, L, XL"
                     />
                   </div>
                   <div className="form-group">
                     <label>Stock *</label>
-                    <input 
-                      type="number" 
-                      value={addSizeFormData.stock} 
-                      onChange={e => setAddSizeFormData(prev => ({...prev, stock: e.target.value}))} 
-                      required 
-                      min="0" 
+                    <input
+                      type="number"
+                      value={addSizeFormData.stock}
+                      onChange={e => setAddSizeFormData(prev => ({ ...prev, stock: e.target.value }))}
+                      required
+                      min="0"
                     />
                   </div>
                 </div>
               </div>
-              
+
               <div className="form-actions sticky-actions">
                 <button type="submit" className="save-btn" disabled={savingSize}>
                   {savingSize ? 'Saving...' : 'Save Size'}
