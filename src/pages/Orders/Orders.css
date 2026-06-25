@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.orders-page {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f4f6fb;
+  padding: 30px;
+  min-height: calc(100vh - 60px);
+}
+
+.orders-card {
+  background: white;
+  padding: 0;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 30px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.orders-header h2 {
+  color: #111;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.search-input {
+  padding: 10px 15px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  width: 250px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background-color: #fff;
+}
+
+.search-input::placeholder {
+  color: #a0a0a0;
+}
+
+.search-input:focus {
+  border-color: #3498db;
+}
+
+.orders-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.orders-table th {
+  background-color: #f8f9fa;
+  color: #444;
+  font-weight: 600;
+  text-align: left;
+  padding: 16px 12px;
+  font-size: 13px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.orders-table td {
+  padding: 18px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #222;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.orders-table tr:hover {
+  background-color: #fcfcfc;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.status-pending { background-color: #f59e0b; color: white; }
+.status-delivered { background-color: #10b981; color: white; }
+.status-shipped { background-color: #3b82f6; color: white; }
+.status-cancelled { background-color: #ef4444; color: white; }
+
+/* Delivery Partner */
+.delivery-partner {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #222;
+}
+
+.dp-icon-user { color: #3b82f6; font-size: 14px; }
+.dp-icon-phone { color: #6b7280; font-size: 12px; }
+
+.not-assigned {
+  color: #b0b0b0;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Action Dropdown */
+.action-btn {
+  background: #f4f4f4;
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #e5e5e5;
+  color: #111;
+}
+
+.address-cell {
+  /* White space handling done via inline style in React to strictly control width */
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 40px;
+  top: 10px;
+  background: white;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-radius: 6px;
+  padding: 5px 0;
+  z-index: 1000;
+  min-width: 140px;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  clear: both;
+  font-weight: 500;
+  color: #444;
+  text-align: left;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #111;
+}
+
+.relative-cell {
+  position: relative;
+}
+
+/* Modal specific updates */
+.orders-loading, .orders-error {
+  padding: 30px;
+  text-align: center;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+}
