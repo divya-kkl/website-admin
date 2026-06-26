@@ -30,6 +30,9 @@ function Sidebar() {
         <NavLink to="/dashboard/users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
           <FaUsers className="nav-icon" /> Users
         </NavLink>
+        <NavLink to="/dashboard/top-banners" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+          <FaImages className="nav-icon" /> Top Banners
+        </NavLink>
         
         <div className="nav-group">
           <div className="nav-link" onClick={() => setBannersOpen(!bannersOpen)} style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
