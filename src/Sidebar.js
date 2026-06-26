@@ -52,6 +52,9 @@ function Sidebar() {
               <NavLink to="/dashboard/banners/third" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} style={{ fontSize: '14px', padding: '8px 15px' }}>
                 Third Banner
               </NavLink>
+              <NavLink to="/dashboard/top-banners" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} style={{ fontSize: '14px', padding: '8px 15px' }}>
+                Top Banners
+              </NavLink>
             </div>
           )}
         </div>
