@@ -28,12 +28,6 @@ const GET_ALL_CATEGORIES = gql`
   }
 `;
 
-const GET_TOTAL_CATEGORIES_COUNT = gql`
-  query GetTotalProductCategoriesCount($search: String) {
-    getTotalProductCategoriesCount(search: $search)
-  }
-`;
-
 const CREATE_CATEGORY = gql`
   mutation CreateProductCategory($input: CreateProductCategoryInput!) {
     createProductCategory(input: $input) {
@@ -99,13 +93,10 @@ function Categories() {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const [data, countData] = await Promise.all([
-        client.request(GET_ALL_CATEGORIES, { search: searchTerm, page, limit }),
-        client.request(GET_TOTAL_CATEGORIES_COUNT, { search: searchTerm })
-      ]);
+      const data = await client.request(GET_ALL_CATEGORIES, { search: searchTerm, page, limit });
       setCategories(data.getAllProductCategories?.categories || []);
       setFilteredCategories(data.getAllProductCategories?.categories || []);
-      setTotalCount(countData.getTotalProductCategoriesCount || 0);
+      setTotalCount(data.getAllProductCategories?.totalCount || 0);
       setError(null);
     } catch (err) {
       setError(err);

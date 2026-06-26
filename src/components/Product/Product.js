@@ -45,28 +45,16 @@ const GET_ALL_PRODUCTS = gql`
         updatedAt
       }
       totalCount
-    }
-  }
-`;
-
-const GET_TOTAL_PRODUCTS_COUNT = gql`
-  query GetTotalProductsCount($search: String) {
-    getTotalProductsCount(search: $search)
-  }
-`;
-
-const GET_ALL_CATEGORIES = gql`
-  query GetAllProductCategories($search: String) {
-    getAllProductCategories(search: $search) {
       categories {
         id
         name
         code
       }
-      totalCount
     }
   }
 `;
+
+
 
 const CREATE_PRODUCT = gql`
   mutation CreateProduct($input: CreateProductInput!) {
@@ -148,14 +136,10 @@ function Product() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [prodData, catData, countData] = await Promise.all([
-        client.request(GET_ALL_PRODUCTS, { search: searchTerm, page, limit }),
-        client.request(GET_ALL_CATEGORIES),
-        client.request(GET_TOTAL_PRODUCTS_COUNT, { search: searchTerm })
-      ]);
-      setFilteredProducts(prodData.getAllProducts?.products || []);
-      setCategories(catData.getAllProductCategories?.categories || []);
-      setTotalCount(countData.getTotalProductsCount || 0);
+      const data = await client.request(GET_ALL_PRODUCTS, { search: searchTerm, page, limit });
+      setFilteredProducts(data.getAllProducts?.products || []);
+      setCategories(data.getAllProducts?.categories || []);
+      setTotalCount(data.getAllProducts?.totalCount || 0);
       setError(null);
     } catch (err) {
       setError(err);

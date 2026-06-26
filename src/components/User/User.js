@@ -43,12 +43,6 @@ const GET_ALL_USERS = gql`
   }
 `;
 
-const GET_TOTAL_USER_COUNT = gql`
-  query GetTotalUserCount($search: String) {
-    getTotalUserCount(search: $search)
-  }
-`;
-
 const REGISTER_USER = gql`
   mutation RegisterUser($input: RegisterInput!) {
     registerUser(input: $input) {
@@ -107,13 +101,10 @@ function User() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const [data, countData] = await Promise.all([
-        client.request(GET_ALL_USERS, { search: searchTerm, page, limit }),
-        client.request(GET_TOTAL_USER_COUNT, { search: searchTerm })
-      ]);
+      const data = await client.request(GET_ALL_USERS, { search: searchTerm, page, limit });
       setUsers(data.getAllUser?.users || []);
       setFilteredUsers(data.getAllUser?.users || []);
-      setTotalCount(countData.getTotalUserCount || 0);
+      setTotalCount(data.getAllUser?.totalCount || 0);
       setError(null);
     } catch (err) {
       setError(err);
