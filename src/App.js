@@ -10,6 +10,7 @@ import Product from './components/Product/Product';
 import Cart from './components/Cart/Cart';
 import User from './components/User/User';
 import Banner from './components/Banner/Banner';
+import TopBanner from './components/TopBanner/TopBanner';
 
 const PrivateRoute = ({ children }) => {
   // Check if token exists or user is logged in
@@ -45,6 +46,7 @@ function App() {
           <Route path="banners/first" element={<main className="dashboard-main"><Banner bannerType="FIRST" title="First Banner" /></main>} />
           <Route path="banners/second" element={<main className="dashboard-main"><Banner bannerType="SECOND" title="Second Banner" /></main>} />
           <Route path="banners/third" element={<main className="dashboard-main"><Banner bannerType="THIRD" title="Third Banner" /></main>} />
+          <Route path="top-banners" element={<main className="dashboard-main"><TopBanner /></main>} />
         </Route>
       </Routes>
     </BrowserRouter>

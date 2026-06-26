@@ -14,36 +14,39 @@ const client = new GraphQLClient(GRAPHQL_ENDPOINT, {
 const GET_ALL_ORDERS = gql`
   query GetAllOrders($search: String, $page: Int, $limit: Int) {
     getAllOrders(search: $search, page: $page, limit: $limit) {
-      id
-      orderNumber
-      subTotal
-      deliveryCharge
-      totalAmount
-      status
-      paymentStatus
-      paymentMethod
-      createdAt
-      couponCode
-      image
-      items {
-        productId
-        name
-        quantity
-        price
+      orders {
+        id
+        orderNumber
+        subTotal
+        deliveryCharge
+        totalAmount
+        status
+        paymentStatus
+        paymentMethod
+        createdAt
+        couponCode
         image
+        items {
+          productId
+          name
+          quantity
+          price
+          image
+        }
+        deliveryAddress {
+          name
+          street
+          city
+          state
+          country
+          phone
+        }
+        deliveryPartner {
+          name
+          contactNumber
+        }
       }
-      deliveryAddress {
-        name
-        street
-        city
-        state
-        country
-        phone
-      }
-      deliveryPartner {
-        name
-        contactNumber
-      }
+      totalCount
     }
   }
 `;
@@ -97,8 +100,8 @@ function Orders() {
         client.request(GET_ALL_ORDERS, { search: searchTerm, page, limit }),
         client.request(GET_TOTAL_ORDERS_COUNT, { search: searchTerm })
       ]);
-      setOrders(data.getAllOrders || []);
-      setFilteredOrders(data.getAllOrders || []);
+      setOrders(data.getAllOrders?.orders || []);
+      setFilteredOrders(data.getAllOrders?.orders || []);
       setTotalCount(countData.getTotalOrdersCount || 0);
       setError(null);
     } catch (err) {
