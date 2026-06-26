@@ -13,14 +13,17 @@ const client = new GraphQLClient(GRAPHQL_ENDPOINT, {
 const GET_ALL_CATEGORIES = gql`
   query GetAllProductCategories($search: String, $page: Int, $limit: Int) {
     getAllProductCategories(search: $search, page: $page, limit: $limit) {
-      id
-      name
-      code
-      description
-      imageUrl
-      status
-      parentCategoryId
-      createdTime
+      categories {
+        id
+        name
+        code
+        description
+        imageUrl
+        status
+        parentCategoryId
+        createdTime
+      }
+      totalCount
     }
   }
 `;
@@ -56,7 +59,6 @@ const DELETE_CATEGORY = gql`
 `;
 
 function Categories() {
-  const [categories, setCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -100,9 +102,8 @@ function Categories() {
         client.request(GET_ALL_CATEGORIES, { search: searchTerm, page, limit }),
         client.request(GET_TOTAL_CATEGORIES_COUNT, { search: searchTerm })
       ]);
-      setCategories(data.getAllProductCategories || []);
-      setFilteredCategories(data.getAllProductCategories || []);
-      setTotalCount(countData.getTotalProductCategoriesCount || 0);
+      setFilteredCategories(data.getAllProductCategories?.categories || []);
+      setTotalCount(data.getAllProductCategories?.totalCount || countData.getTotalProductCategoriesCount || 0);
       setError(null);
     } catch (err) {
       setError(err);
@@ -120,6 +121,7 @@ function Categories() {
       fetchCategories();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page]);
 
   const handleImageUpload = async (e) => {

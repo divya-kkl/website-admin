@@ -13,29 +13,32 @@ const client = new GraphQLClient(GRAPHQL_ENDPOINT, {
 const GET_ALL_USERS = gql`
   query GetAllUser($search: String, $page: Int, $limit: Int) {
     getAllUser(search: $search, page: $page, limit: $limit) {
-      id
-      username
-      email
-      country
-      state
-      city
-      address
-      phone_number
-      pincode
-      gender
-      addresses {
+      users {
         id
-        firstName
-        lastName
-        address
-        apartment
-        city
-        state
-        pincode
+        username
+        email
         country
-        phone
-        isDefault
+        state
+        city
+        address
+        phone_number
+        pincode
+        gender
+        addresses {
+          id
+          firstName
+          lastName
+          address
+          apartment
+          city
+          state
+          pincode
+          country
+          phone
+          isDefault
+        }
       }
+      totalCount
     }
   }
 `;
@@ -71,9 +74,7 @@ const DELETE_USER = gql`
 `;
 
 function User() {
-  const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -108,8 +109,7 @@ function User() {
         client.request(GET_ALL_USERS, { search: searchTerm, page, limit }),
         client.request(GET_TOTAL_USER_COUNT, { search: searchTerm })
       ]);
-      setUsers(data.getAllUser || []);
-      setFilteredUsers(data.getAllUser || []);
+      setFilteredUsers(data.getAllUser?.users || []);
       setTotalCount(countData.getTotalUserCount || 0);
       setError(null);
     } catch (err) {
@@ -128,6 +128,7 @@ function User() {
       fetchUsers();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page]);
 
   const handleOpenModal = (user = null) => {

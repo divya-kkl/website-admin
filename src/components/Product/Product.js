@@ -13,35 +13,38 @@ const client = new GraphQLClient(GRAPHQL_ENDPOINT, {
 const GET_ALL_PRODUCTS = gql`
   query GetAllProducts($search: String, $page: Int, $limit: Int) {
     getAllProducts(search: $search, page: $page, limit: $limit) {
-      id
-      name
-      price
-      mrp
-      discountPercentage
-      images
-      brand
-      productCategoriesID
-      productCategoriesCode
-      productCategories {
+      products {
+        id
         name
+        price
+        mrp
+        discountPercentage
+        images
+        brand
+        productCategoriesID
+        productCategoriesCode
+        productCategories {
+          name
+        }
+        variants {
+          color
+          size
+          stock
+        }
+        isFeatured
+        description
+        material
+        embellishment
+        neck
+        sleeves
+        closure
+        lining
+        washCare
+        ironCare
+        createdAt
+        updatedAt
       }
-      variants {
-        color
-        size
-        stock
-      }
-      isFeatured
-      description
-      material
-      embellishment
-      neck
-      sleeves
-      closure
-      lining
-      washCare
-      ironCare
-      createdAt
-      updatedAt
+      totalCount
     }
   }
 `;
@@ -55,9 +58,11 @@ const GET_TOTAL_PRODUCTS_COUNT = gql`
 const GET_ALL_CATEGORIES = gql`
   query GetAllProductCategories($search: String) {
     getAllProductCategories(search: $search) {
-      id
-      name
-      code
+      categories {
+        id
+        name
+        code
+      }
     }
   }
 `;
@@ -147,8 +152,8 @@ function Product() {
         client.request(GET_ALL_CATEGORIES),
         client.request(GET_TOTAL_PRODUCTS_COUNT, { search: searchTerm })
       ]);
-      setFilteredProducts(prodData.getAllProducts || []);
-      setCategories(catData.getAllProductCategories || []);
+      setFilteredProducts(prodData.getAllProducts?.products || []);
+      setCategories(catData.getAllProductCategories?.categories || []);
       setTotalCount(countData.getTotalProductsCount || 0);
       setError(null);
     } catch (err) {

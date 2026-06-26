@@ -14,36 +14,39 @@ const client = new GraphQLClient(GRAPHQL_ENDPOINT, {
 const GET_ALL_ORDERS = gql`
   query GetAllOrders($search: String, $page: Int, $limit: Int) {
     getAllOrders(search: $search, page: $page, limit: $limit) {
-      id
-      orderNumber
-      subTotal
-      deliveryCharge
-      totalAmount
-      status
-      paymentStatus
-      paymentMethod
-      createdAt
-      couponCode
-      image
-      items {
-        productId
-        name
-        quantity
-        price
+      orders {
+        id
+        orderNumber
+        subTotal
+        deliveryCharge
+        totalAmount
+        status
+        paymentStatus
+        paymentMethod
+        createdAt
+        couponCode
         image
+        items {
+          productId
+          name
+          quantity
+          price
+          image
+        }
+        deliveryAddress {
+          name
+          street
+          city
+          state
+          country
+          phone
+        }
+        deliveryPartner {
+          name
+          contactNumber
+        }
       }
-      deliveryAddress {
-        name
-        street
-        city
-        state
-        country
-        phone
-      }
-      deliveryPartner {
-        name
-        contactNumber
-      }
+      totalCount
     }
   }
 `;
@@ -71,7 +74,6 @@ const DELETE_ORDER = gql`
 `;
 
 function Orders() {
-  const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -86,9 +88,7 @@ function Orders() {
   const [editModalOrder, setEditModalOrder] = useState(null);
   
   const [openDropdownId, setOpenDropdownId] = useState(null);
-  const [editingImage, setEditingImage] = useState(null);
-  const [editingStatus, setEditingStatus] = useState("");
-  const [uploadingImage, setUploadingImage] = useState(false);
+
 
   const fetchOrders = async () => {
     try {
@@ -97,9 +97,8 @@ function Orders() {
         client.request(GET_ALL_ORDERS, { search: searchTerm, page, limit }),
         client.request(GET_TOTAL_ORDERS_COUNT, { search: searchTerm })
       ]);
-      setOrders(data.getAllOrders || []);
-      setFilteredOrders(data.getAllOrders || []);
-      setTotalCount(countData.getTotalOrdersCount || 0);
+      setFilteredOrders(data.getAllOrders?.orders || []);
+      setTotalCount(data.getAllOrders?.totalCount || countData.getTotalOrdersCount || 0);
       setError(null);
     } catch (err) {
       setError(err);
@@ -117,6 +116,7 @@ function Orders() {
       fetchOrders();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page]);
 
   if (error) return <div className="orders-error">Error loading orders: {error.message}</div>;
@@ -130,29 +130,6 @@ function Orders() {
       alert("Failed to update status: " + err.message);
     }
     setOpenDropdownId(null);
-  };
-
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "image_e-commerce");
-
-    setUploadingImage(true);
-    try {
-      const res = await fetch("https://api.cloudinary.com/v1_1/dvhtqze0j/image/upload", {
-        method: "POST",
-        body: data,
-      });
-      const fileData = await res.json();
-      setEditingImage(fileData.secure_url);
-    } catch (err) {
-      alert("Upload failed");
-    } finally {
-      setUploadingImage(false);
-    }
   };
 
   const handleDelete = async (id) => {
@@ -407,11 +384,10 @@ function Orders() {
               <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
                 <button 
                   onClick={() => {
-                    handleStatusChange(editModalOrder.id, editModalOrder.status, editingImage);
+                    handleStatusChange(editModalOrder.id, editModalOrder.status);
                     setEditModalOrder(null);
                   }}
-                  disabled={uploadingImage}
-                  style={{ padding: '10px 20px', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', fontFamily: "sans-serif" }}
+                  style={{ padding: '10px 20px', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', fontFamily: "sans-serif" }}
                 >
                   Update Status
                 </button>
