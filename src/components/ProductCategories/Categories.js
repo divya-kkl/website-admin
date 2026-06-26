@@ -66,6 +66,17 @@ function Categories() {
   const limit = 10;
   const totalPages = Math.ceil(totalCount / limit);
 
+  const [toastMessage, setToastMessage] = useState(null);
+  const [toastType, setToastType] = useState('error'); // 'success' or 'error'
+
+  const showToast = (message, type = 'error') => {
+    setToastMessage(message);
+    setToastType(type);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3000);
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -128,7 +139,7 @@ function Categories() {
       const fileData = await res.json();
       setFormData(prev => ({ ...prev, imageUrl: fileData.secure_url }));
     } catch (err) {
-      alert("Image upload failed. Please try again.");
+      showToast("Image upload failed. Please try again.", "error");
     } finally {
       setUploadingImage(false);
     }
@@ -199,20 +210,21 @@ function Categories() {
       }
       fetchCategories();
       handleCloseModal();
+      showToast("Category saved successfully", "success");
     } catch (err) {
-      alert("Error saving category: " + err.message);
+      showToast("Error saving category: " + err.message, "error");
     }
   };
 
   const handleDelete = async (id) => {
     setOpenDropdownId(null);
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      try {
-        await client.request(DELETE_CATEGORY, { id });
-        fetchCategories();
-      } catch (err) {
-        alert("Failed to delete category: " + err.message);
-      }
+    try {
+      await client.request(DELETE_CATEGORY, { id });
+      fetchCategories();
+      showToast("Category deleted successfully", "success");
+    } catch (err) {
+      const errorMessage = err.response?.errors?.[0]?.message || "Failed to delete category";
+      showToast(errorMessage, "error");
     }
   };
 
@@ -235,6 +247,35 @@ function Categories() {
 
   return (
     <div className="categories-page">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          backgroundColor: toastType === 'error' ? '#f44336' : '#4caf50',
+          color: 'white',
+          padding: '16px',
+          borderRadius: '4px',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+          zIndex: 10000,
+          fontWeight: '500',
+          transition: 'opacity 0.3s',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <span>{toastMessage}</span>
+          <button 
+            onClick={() => setToastMessage(null)} 
+            style={{
+              background: 'none', border: 'none', color: 'white', 
+              fontSize: '18px', cursor: 'pointer', marginLeft: '10px'
+            }}>
+            &times;
+          </button>
+        </div>
+      )}
       <style>{`
         @keyframes shimmer {
           0% { background-position: -468px 0; }
