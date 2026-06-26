@@ -51,12 +51,6 @@ const GET_ALL_ORDERS = gql`
   }
 `;
 
-const GET_TOTAL_ORDERS_COUNT = gql`
-  query GetTotalOrdersCount($search: String) {
-    getTotalOrdersCount(search: $search)
-  }
-`;
-
 const UPDATE_ORDER_STATUS = gql`
   mutation UpdateOrderStatus($id: ID!, $status: String!, $image: String) {
     updateOrderStatus(id: $id, status: $status, image: $image) {
@@ -96,13 +90,10 @@ function Orders() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const [data, countData] = await Promise.all([
-        client.request(GET_ALL_ORDERS, { search: searchTerm, page, limit }),
-        client.request(GET_TOTAL_ORDERS_COUNT, { search: searchTerm })
-      ]);
+      const data = await client.request(GET_ALL_ORDERS, { search: searchTerm, page, limit });
       setOrders(data.getAllOrders?.orders || []);
       setFilteredOrders(data.getAllOrders?.orders || []);
-      setTotalCount(countData.getTotalOrdersCount || 0);
+      setTotalCount(data.getAllOrders?.totalCount || 0);
       setError(null);
     } catch (err) {
       setError(err);
