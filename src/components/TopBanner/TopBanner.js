@@ -186,12 +186,17 @@ function TopBanner() {
       </table>
 
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>{editingBanner ? 'Edit Banner Message' : 'Add New Banner Message'}</h3>
+        <div className="modal-overlay" onClick={handleCloseModal} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '500px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaEdit color="#4a90e2" /> {editingBanner ? 'Edit Banner Message' : 'Add New Banner Message'}
+              </h2>
+              <button onClick={handleCloseModal} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
+            </div>
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Message Text</label>
+              <div className="form-group" style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Message Text *</label>
                 <input
                   type="text"
                   name="message"
@@ -199,22 +204,39 @@ function TopBanner() {
                   onChange={handleChange}
                   required
                   placeholder="Enter message text..."
+                  style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }}
                 />
               </div>
-              <div className="form-group">
-                <label className="checkbox-label">
+              <div className="form-group" style={{ marginBottom: '20px', background: '#f8f9fa', padding: '15px', borderRadius: '8px', border: '1px solid #eee' }}>
+                <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: '500', color: '#333', fontSize: '14px' }}>
                   <input
                     type="checkbox"
                     name="isActive"
                     checked={formData.isActive}
                     onChange={handleChange}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
                   />
                   Active (Will be displayed on website)
                 </label>
               </div>
-              <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={handleCloseModal}>Cancel</button>
-                <button type="submit" className="save-btn">Save</button>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px', marginTop: '10px', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+                <button 
+                  type="button" 
+                  onClick={handleCloseModal}
+                  style={{ padding: '10px 20px', background: '#fff', color: '#555', border: '1px solid #d9d9d9', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#4a90e2'; e.currentTarget.style.borderColor = '#4a90e2'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderColor = '#d9d9d9'; }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
+                  onMouseOver={(e) => e.currentTarget.style.background = '#357abd'}
+                  onMouseOut={(e) => e.currentTarget.style.background = '#4a90e2'}
+                >
+                  Save
+                </button>
               </div>
             </form>
           </div>

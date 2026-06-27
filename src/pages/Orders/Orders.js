@@ -380,19 +380,19 @@ function Orders() {
 
       {editModalOrder && (
         <div className="modal-overlay" onClick={() => { setEditModalOrder(null); setEditingImage(null); }} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '450px', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '500px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
-              <h3 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <FaEdit color="#4a90e2" /> Update Order Status
-              </h3>
+              </h2>
               <button onClick={() => { setEditModalOrder(null); setEditingImage(null); }} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Order Status</label>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Order Status *</label>
                 <select 
-                  style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #e0e0e0', fontSize: '15px', color: '#333', backgroundColor: '#f9f9f9', outline: 'none', transition: 'border-color 0.3s' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px', backgroundColor: '#fff' }}
                   value={editModalOrder.status || 'PENDING'}
                   onChange={(e) => setEditModalOrder({...editModalOrder, status: e.target.value})}
                 >
@@ -452,7 +452,7 @@ function Orders() {
                     setEditingImage(null);
                   }}
                   disabled={uploadingImage}
-                  style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
+                  style={{ padding: '10px 24px', background: uploadingImage ? '#a0c4f0' : '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
                   onMouseOver={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#357abd'; }}
                   onMouseOut={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#4a90e2'; }}
                 >
