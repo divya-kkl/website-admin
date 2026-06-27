@@ -15,16 +15,8 @@ const GET_ALL_BANNERS = gql`
     getAllBanners(bannerType: $bannerType) {
       id
       backgroundImage
-      sideImage
-      sideContent
       bannerType
       isActive
-      fontColor
-      fontSize
-      buttonColor
-      buttonSize
-      contentPosition
-      imagePosition
       createdAt
     }
   }
@@ -61,14 +53,7 @@ function Banner({ bannerType, title }) {
   const [viewModalBanner, setViewModalBanner] = useState(null);
 
   const [formData, setFormData] = useState({
-    sideImage: '',
-    sideContent: '',
-    fontColor: '#5c3516',
-    fontSize: '16px',
-    buttonColor: '',
-    buttonSize: '16px',
-    contentPosition: 'LEFT',
-    imagePosition: 'RIGHT',
+    backgroundImage: '',
     isActive: true
   });
 
@@ -93,28 +78,12 @@ function Banner({ bannerType, title }) {
       setEditingBanner(banner);
       setFormData({
         backgroundImage: banner.backgroundImage || '',
-        sideImage: banner.sideImage || '',
-        sideContent: banner.sideContent || '',
-        fontColor: banner.fontColor || '#5c3516',
-        fontSize: banner.fontSize || '16px',
-        buttonColor: banner.buttonColor || '',
-        buttonSize: banner.buttonSize || '16px',
-        contentPosition: banner.contentPosition || 'LEFT',
-        imagePosition: banner.imagePosition || 'RIGHT',
         isActive: banner.isActive
       });
     } else {
       setEditingBanner(null);
       setFormData({
         backgroundImage: '',
-        sideImage: '',
-        sideContent: '',
-        fontColor: '#5c3516',
-        fontSize: '16px',
-        buttonColor: '',
-        buttonSize: '16px',
-        contentPosition: 'LEFT',
-        imagePosition: 'RIGHT',
         isActive: true
       });
     }
@@ -210,29 +179,21 @@ function Banner({ bannerType, title }) {
           <table className="banner-table">
             <thead>
               <tr>
-                <th>Background Image</th>
-                <th>Side Image</th>
-                <th>Side Content</th>
+                <th>Image</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="5" style={{textAlign: 'center'}}>Loading...</td></tr>
+                <tr><td colSpan="3" style={{textAlign: 'center'}}>Loading...</td></tr>
               ) : banners.length === 0 ? (
-                <tr><td colSpan="5" style={{textAlign: 'center'}}>No banners found for {title}.</td></tr>
+                <tr><td colSpan="3" style={{textAlign: 'center'}}>No banners found for {title}.</td></tr>
               ) : (
                 banners.map(banner => (
                   <tr key={banner.id}>
                     <td>
-                      <img src={banner.backgroundImage} alt="Background" className="banner-image-preview" />
-                    </td>
-                    <td>
-                      <img src={banner.sideImage} alt="Side" className="banner-image-preview" />
-                    </td>
-                    <td>
-                      {banner.sideContent}
+                      <img src={banner.backgroundImage} alt="Banner" className="banner-image-preview" style={{width: '120px', height: 'auto', borderRadius: '4px', border: '1px solid #eee'}} />
                     </td>
                     <td>
                       <span className={`badge ${banner.isActive ? 'badge-active' : 'badge-inactive'}`}>
@@ -260,165 +221,94 @@ function Banner({ bannerType, title }) {
 
       {/* View Details Modal */}
       {viewModalBanner && (
-        <div className="modal-overlay" onClick={() => setViewModalBanner(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Banner Details</h2>
-              <button className="btn-close" onClick={() => setViewModalBanner(null)}>&times;</button>
+        <div className="modal-overlay" onClick={() => setViewModalBanner(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '500px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaEye color="#4a90e2" /> Banner Details
+              </h2>
+              <button onClick={() => setViewModalBanner(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
             </div>
             
-            <div className="modal-body">
-              <div style={{ marginBottom: '15px' }}>
-                <strong style={{ display: 'block', marginBottom: '5px' }}>Background Image:</strong>
-                <img src={viewModalBanner.backgroundImage} alt="Background" style={{ width: '100%', borderRadius: '4px', border: '1px solid #ddd' }} />
-              </div>
-              <div style={{ marginBottom: '15px' }}>
-                <strong style={{ display: 'block', marginBottom: '5px' }}>Side Image:</strong>
-                <img src={viewModalBanner.sideImage} alt="Side" style={{ width: '150px', borderRadius: '4px', border: '1px solid #ddd' }} />
-              </div>
-              <div style={{ marginBottom: '15px' }}>
-                <strong>Side Content Preview:</strong> 
-                <div style={{ marginTop: '5px', padding: '10px', border: '1px dashed #ccc', borderRadius: '4px', color: viewModalBanner.fontColor, fontSize: isNaN(viewModalBanner.fontSize) ? viewModalBanner.fontSize : `${viewModalBanner.fontSize}px` }}>
-                  {viewModalBanner.sideContent}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', fontSize: '15px', color: '#555' }}>
+              <div>
+                <strong style={{ display: 'block', marginBottom: '10px', color: '#333', fontSize: '16px' }}>Image:</strong>
+                <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #eee', background: '#fafafa', padding: '10px' }}>
+                  <img src={viewModalBanner.backgroundImage} alt="Banner" style={{ width: '100%', height: 'auto', maxHeight: '300px', objectFit: 'contain', display: 'block' }} />
                 </div>
               </div>
-              <div style={{ marginBottom: '15px' }}>
-                <strong>Status:</strong> <span className={`badge ${viewModalBanner.isActive ? 'badge-active' : 'badge-inactive'}`}>
-                  {viewModalBanner.isActive ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-              <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
-                <div>
-                  <strong>Font Color:</strong> <span style={{ display: 'inline-block', width: '15px', height: '15px', backgroundColor: viewModalBanner.fontColor, borderRadius: '2px', marginLeft: '5px', verticalAlign: 'middle', border: '1px solid #ccc' }}></span> {viewModalBanner.fontColor}
-                </div>
-                <div>
-                  <strong>Title Font Size:</strong> {viewModalBanner.fontSize}
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
-                <div>
-                  <strong>Button Color:</strong> {viewModalBanner.buttonColor ? <><span style={{ display: 'inline-block', width: '15px', height: '15px', backgroundColor: viewModalBanner.buttonColor, borderRadius: '2px', marginLeft: '5px', verticalAlign: 'middle', border: '1px solid #ccc' }}></span> {viewModalBanner.buttonColor}</> : 'Default'}
-                </div>
-                <div>
-                  <strong>Button Size:</strong> {viewModalBanner.buttonSize}
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
-                <div>
-                  <strong>Content Position:</strong> {viewModalBanner.contentPosition || 'LEFT'}
-                </div>
-                <div>
-                  <strong>Image Position:</strong> {viewModalBanner.imagePosition || 'RIGHT'}
+
+              <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', border: '1px solid #eee' }}>
+                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Status</h3>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span className={`badge ${viewModalBanner.isActive ? 'badge-active' : 'badge-inactive'}`}>
+                    {viewModalBanner.isActive ? 'Active' : 'Inactive'}
+                  </span>
                 </div>
               </div>
             </div>
 
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={() => setViewModalBanner(null)}>Close</button>
+            <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'flex-end', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+              <button onClick={() => setViewModalBanner(null)} style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }} onMouseOver={(e) => e.currentTarget.style.background = '#357abd'} onMouseOut={(e) => e.currentTarget.style.background = '#4a90e2'}>Close</button>
             </div>
           </div>
         </div>
       )}
 
       {isModalOpen && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>{editingBanner ? `Edit ${title}` : `Add New ${title}`}</h2>
-              <button className="btn-close" onClick={handleCloseModal}>&times;</button>
+        <div className="modal-overlay" onClick={handleCloseModal} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '500px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px', flexShrink: 0 }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaEdit color="#4a90e2" /> {editingBanner ? `Edit ${title}` : `Add New ${title}`}
+              </h2>
+              <button onClick={handleCloseModal} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
             </div>
             
-            <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}>
-              <div className="modal-body" style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
-                <div className="form-group">
-                  <label>Background Image *</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'backgroundImage')} disabled={uploadingImage} required={!formData.backgroundImage} />
-                  {formData.backgroundImage && (
-                    <div style={{ marginTop: '10px' }}>
-                      <img src={formData.backgroundImage} alt="Background Preview" style={{ width: '100px', border: '1px solid #ddd', borderRadius: '4px' }} />
-                    </div>
-                  )}
-                </div>
-                <div className="form-group">
-                  <label>Side Image *</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'sideImage')} disabled={uploadingImage} required={!formData.sideImage} />
-                  {formData.sideImage && (
-                    <div style={{ marginTop: '10px' }}>
-                      <img src={formData.sideImage} alt="Side Preview" style={{ width: '100px', border: '1px solid #ddd', borderRadius: '4px' }} />
-                    </div>
-                  )}
-                </div>
-                <div className="form-group">
-                  <label>Side Content *</label>
-                  <textarea name="sideContent" required value={formData.sideContent} onChange={handleChange} placeholder="Enter side content text (use Enter for new lines)" rows="3" style={{width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc'}}></textarea>
-                </div>
-                <div className="form-row" style={{ display: 'flex', gap: '15px' }}>
-                  <div className="form-group" style={{ flex: 1 }}>
-                    <label>Font Color</label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <input type="color" name="fontColor" value={formData.fontColor} onChange={handleChange} style={{ padding: '0', width: '40px', height: '40px', border: 'none', borderRadius: '4px', cursor: 'pointer' }} />
-                      <span style={{ fontSize: '14px', color: '#555' }}>{formData.fontColor}</span>
-                    </div>
-                  </div>
-                  <div className="form-group" style={{ flex: 1 }}>
-                    <label>Title Font Size</label>
-                    <input 
-                      type="text" 
-                      name="fontSize" 
-                      value={formData.fontSize} 
-                      onChange={handleChange} 
-                      placeholder="e.g., 24px" 
-                      style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }} 
-                    />
+            <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <div style={{ flex: 1, overflowY: 'auto', paddingRight: '10px' }}>
+                
+                <div style={{ marginBottom: '25px' }}>
+                  <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Media Asset</h3>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Banner Image *</label>
+                    <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'backgroundImage')} disabled={uploadingImage} required={!formData.backgroundImage} style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '14px' }} />
+                    {formData.backgroundImage && (
+                      <div style={{ marginTop: '10px', borderRadius: '6px', overflow: 'hidden', border: '1px solid #eee', background: '#fafafa', padding: '10px' }}>
+                        <img src={formData.backgroundImage} alt="Banner Preview" style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain' }} />
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="form-row" style={{ display: 'flex', gap: '15px' }}>
-                  <div className="form-group" style={{ flex: 1 }}>
-                    <label>Button Color (Optional)</label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <input type="color" name="buttonColor" value={formData.buttonColor} onChange={handleChange} style={{ padding: '0', width: '40px', height: '40px', border: 'none', borderRadius: '4px', cursor: 'pointer' }} />
-                      <span style={{ fontSize: '14px', color: '#555' }}>{formData.buttonColor || 'Default'}</span>
-                    </div>
-                  </div>
-                  <div className="form-group" style={{ flex: 1 }}>
-                    <label>Button Font Size</label>
-                    <input 
-                      type="text" 
-                      name="buttonSize" 
-                      value={formData.buttonSize} 
-                      onChange={handleChange} 
-                      placeholder="e.g., 16px" 
-                      style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }} 
-                    />
-                  </div>
-                </div>
-                <div className="form-row" style={{ display: 'flex', gap: '15px' }}>
-                  <div className="form-group" style={{ flex: 1 }}>
-                    <label>Content Position</label>
-                    <select name="contentPosition" value={formData.contentPosition} onChange={handleChange} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}>
-                      <option value="LEFT">Left</option>
-                      <option value="CENTER">Center</option>
-                      <option value="RIGHT">Right</option>
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ flex: 1 }}>
-                    <label>Image Position</label>
-                    <select name="imagePosition" value={formData.imagePosition} onChange={handleChange} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}>
-                      <option value="LEFT">Left</option>
-                      <option value="CENTER">Center</option>
-                      <option value="RIGHT">Right</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group" style={{ display: 'flex', alignItems: 'center' }}>
-                  <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} id="isActiveCheckbox" />
-                  <label htmlFor="isActiveCheckbox" style={{ marginBottom: 0 }}>Is Active</label>
+
+                <div style={{ background: '#f8f9fa', padding: '15px', borderRadius: '8px', border: '1px solid #eee' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: '500', color: '#333', fontSize: '14px', margin: 0 }}>
+                    <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                    Active (Will be displayed on website)
+                  </label>
                 </div>
               </div>
 
-              <div className="modal-footer">
-                <button type="button" className="cancel-btn" onClick={handleCloseModal}>Cancel</button>
-                <button type="submit" className="save-btn">Save</button>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px', marginTop: '15px', paddingTop: '20px', borderTop: '1px solid #f0f0f0', flexShrink: 0 }}>
+                <button 
+                  type="button" 
+                  onClick={handleCloseModal}
+                  style={{ padding: '10px 20px', background: '#fff', color: '#555', border: '1px solid #d9d9d9', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#4a90e2'; e.currentTarget.style.borderColor = '#4a90e2'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderColor = '#d9d9d9'; }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={uploadingImage}
+                  style={{ padding: '10px 24px', background: uploadingImage ? '#a0c4f0' : '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
+                  onMouseOver={(e) => !uploadingImage && (e.currentTarget.style.background = '#357abd')}
+                  onMouseOut={(e) => !uploadingImage && (e.currentTarget.style.background = '#4a90e2')}
+                >
+                  {uploadingImage ? 'Uploading...' : 'Save Banner'}
+                </button>
               </div>
             </form>
           </div>

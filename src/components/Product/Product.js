@@ -536,67 +536,64 @@ function Product() {
 
       {/* View Details Modal */}
       {viewModalProduct && (
-        <div className="modal-overlay" onClick={() => setViewModalProduct(null)}>
-          <div className="modal-content view-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Product Details</h2>
-              <button className="btn-close" onClick={() => setViewModalProduct(null)}>&times;</button>
+        <div className="modal-overlay" onClick={() => setViewModalProduct(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '700px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaEye color="#4a90e2" /> Product Details
+              </h2>
+              <button onClick={() => setViewModalProduct(null)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
             </div>
-
-            <div className="modal-body scrollable-body">
-              <div className="view-images">
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', fontSize: '15px', color: '#555' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', gap: '10px', flexWrap: 'wrap' }}>
                 {viewModalProduct.images?.map((img, i) => (
-                  <img key={i} src={img} alt="Product" className="view-img-box" />
+                  <img key={i} src={img} alt="Product" style={{ width: '120px', height: '120px', borderRadius: '12px', objectFit: 'cover', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                 ))}
               </div>
-
-              <div className="view-info-grid">
-                <div><strong>Name:</strong> {viewModalProduct.name}</div>
-                <div><strong>Brand:</strong> {viewModalProduct.brand}</div>
-                <div><strong>Price:</strong> ₹{viewModalProduct.price}</div>
-                <div><strong>MRP:</strong> ₹{viewModalProduct.mrp}</div>
-                <div><strong>Discount:</strong> {viewModalProduct.discountPercentage}%</div>
-                <div><strong>Category:</strong> {viewModalProduct.productCategories?.name || viewModalProduct.productCategoriesCode}</div>
-              </div>
-
-              <div className="view-section-title">Description</div>
-              <p className="view-desc">{viewModalProduct.description || "N/A"}</p>
-
-              <div className="view-section-title">Variants</div>
-              <table className="view-variant-table">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Name:</strong> <span>{viewModalProduct.name}</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Brand:</strong> <span>{viewModalProduct.brand}</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Price:</strong> <span>₹{viewModalProduct.price}</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>MRP:</strong> <span>₹{viewModalProduct.mrp}</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Discount:</strong> <span>{viewModalProduct.discountPercentage}%</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Category:</strong> <span>{viewModalProduct.productCategories?.name || viewModalProduct.productCategoriesCode}</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Description:</strong> <span>{viewModalProduct.description || "N/A"}</span></div>
+              
+              <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block', alignSelf: 'flex-start', marginTop: '10px' }}>Variants</h3>
+              <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '15px' }}>
                 <thead>
-                  <tr>
-                    <th>Color</th>
-                    <th>Size</th>
-                    <th>Stock</th>
+                  <tr style={{ background: '#f5f5f5', textAlign: 'left' }}>
+                    <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Color</th>
+                    <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Size</th>
+                    <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Stock</th>
                   </tr>
                 </thead>
                 <tbody>
                   {viewModalProduct.variants?.map((v, i) => (
-                    <tr key={i}>
-                      <td>{v.color}</td>
-                      <td>{v.size}</td>
-                      <td>{v.stock}</td>
+                    <tr key={i} style={{ borderBottom: '1px solid #eee' }}>
+                      <td style={{ padding: '10px' }}>{v.color}</td>
+                      <td style={{ padding: '10px' }}>{v.size}</td>
+                      <td style={{ padding: '10px' }}>{v.stock}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
 
-              <div className="view-section-title">More Details</div>
-              <div className="view-info-grid">
-                <div><strong>Material:</strong> {viewModalProduct.material || "N/A"}</div>
-                <div><strong>Embellishment:</strong> {viewModalProduct.embellishment || "N/A"}</div>
-                <div><strong>Neck:</strong> {viewModalProduct.neck || "N/A"}</div>
-                <div><strong>Sleeves:</strong> {viewModalProduct.sleeves || "N/A"}</div>
-                <div><strong>Closure:</strong> {viewModalProduct.closure || "N/A"}</div>
-                <div><strong>Lining:</strong> {viewModalProduct.lining || "N/A"}</div>
-                <div><strong>Wash Care:</strong> {viewModalProduct.washCare || "N/A"}</div>
-                <div><strong>Iron Care:</strong> {viewModalProduct.ironCare || "N/A"}</div>
+              <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block', alignSelf: 'flex-start' }}>More Details</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Material:</strong> {viewModalProduct.material || "N/A"}</div>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Embellishment:</strong> {viewModalProduct.embellishment || "N/A"}</div>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Neck:</strong> {viewModalProduct.neck || "N/A"}</div>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Sleeves:</strong> {viewModalProduct.sleeves || "N/A"}</div>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Closure:</strong> {viewModalProduct.closure || "N/A"}</div>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Lining:</strong> {viewModalProduct.lining || "N/A"}</div>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Wash Care:</strong> {viewModalProduct.washCare || "N/A"}</div>
+                <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Iron Care:</strong> {viewModalProduct.ironCare || "N/A"}</div>
               </div>
             </div>
 
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={() => setViewModalProduct(null)}>Close</button>
+            <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'flex-end', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+              <button onClick={() => setViewModalProduct(null)} style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }} onMouseOver={(e) => e.currentTarget.style.background = '#357abd'} onMouseOut={(e) => e.currentTarget.style.background = '#4a90e2'}>Close</button>
             </div>
           </div>
         </div>
@@ -604,160 +601,175 @@ function Product() {
 
       {/* Add / Edit Form Modal */}
       {isModalOpen && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content form-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>{editingProduct ? "Edit Product" : "Add New Product"}</h2>
-              <button className="btn-close" onClick={handleCloseModal}>&times;</button>
+        <div className="modal-overlay" onClick={handleCloseModal} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '800px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaEdit color="#4a90e2" /> {editingProduct ? "Edit Product" : "Add New Product"}
+              </h2>
+              <button onClick={handleCloseModal} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
             </div>
 
-            <form onSubmit={handleSave} className="modal-body scrollable-body">
-              <div className="form-section">
-                <h3>Basic Information</h3>
-                <div className="form-row">
+            <form onSubmit={handleSave}>
+              <div style={{ marginBottom: '25px' }}>
+                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Basic Information</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                   <div className="form-group">
-                    <label>Product Name *</label>
-                    <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="E.g. Cotton T-Shirt" />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Product Name *</label>
+                    <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="E.g. Cotton T-Shirt" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group">
-                    <label>Brand *</label>
-                    <input type="text" required value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})} placeholder="E.g. Nike" />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Brand *</label>
+                    <input type="text" required value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})} placeholder="E.g. Nike" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})} id="isFeatured" />
-                    <label htmlFor="isFeatured" style={{ marginBottom: 0, cursor: 'pointer' }}>Featured Product</label>
+                  <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', gridColumn: '1 / -1' }}>
+                    <input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})} id="isFeatured" style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                    <label htmlFor="isFeatured" style={{ marginBottom: 0, cursor: 'pointer', fontWeight: '500', color: '#555', fontSize: '14px' }}>Featured Product</label>
                   </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Category *</label>
-                    <select required value={formData.productCategoriesID} onChange={handleCategoryChange}>
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Category *</label>
+                    <select required value={formData.productCategoriesID} onChange={handleCategoryChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px', backgroundColor: '#fff' }}>
                       <option value="">Select Category</option>
                       {categories.map(cat => (
                         <option key={cat.id} value={cat.id}>{cat.name} ({cat.code})</option>
                       ))}
                     </select>
                   </div>
-                </div>
-                <div className="form-group">
-                  <label>Description</label>
-                  <textarea rows="3" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Product description..."></textarea>
-                </div>
-              </div>
-
-              <div className="form-section">
-                <h3>Pricing</h3>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Price (₹) *</label>
-                    <input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
-                  </div>
-                  <div className="form-group">
-                    <label>MRP (₹) *</label>
-                    <input type="number" required value={formData.mrp} onChange={(e) => setFormData({ ...formData, mrp: e.target.value })} />
-                  </div>
-                  <div className="form-group">
-                    <label>Discount (%)</label>
-                    <input type="number" value={formData.discountPercentage} onChange={(e) => setFormData({ ...formData, discountPercentage: e.target.value })} />
+                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Description</label>
+                    <textarea rows="3" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Product description..." style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px', resize: 'vertical' }}></textarea>
                   </div>
                 </div>
               </div>
 
-              <div className="form-section">
-                <h3>Images</h3>
-                <div className="image-upload-wrapper">
-                  <input type="file" multiple accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} className="file-input" />
-                  {uploadingImage && <span className="upload-text">Uploading images...</span>}
-
-                  <div className="uploaded-images-container">
-                    {formData.images.map((img, index) => (
-                      <div key={index} className="uploaded-image-box">
-                        <img src={img} alt="uploaded" />
-                        <button type="button" className="remove-img-btn" onClick={() => removeImage(index)}><FaTimes /></button>
-                      </div>
-                    ))}
-                    {formData.images.length === 0 && !uploadingImage && (
-                      <div className="placeholder-text">No images uploaded yet.</div>
-                    )}
+              <div style={{ marginBottom: '25px' }}>
+                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Pricing</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Price (₹) *</label>
+                    <input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
+                  </div>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>MRP (₹) *</label>
+                    <input type="number" required value={formData.mrp} onChange={(e) => setFormData({ ...formData, mrp: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
+                  </div>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Discount (%)</label>
+                    <input type="number" value={formData.discountPercentage} onChange={(e) => setFormData({ ...formData, discountPercentage: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                 </div>
               </div>
 
-              <div className="form-section">
-                <h3>Variants (Color, Size, Stock) *</h3>
-                <table className="variant-form-table">
+              <div style={{ marginBottom: '25px' }}>
+                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Images</h3>
+                <div style={{ border: '2px dashed #d9d9d9', borderRadius: '8px', padding: '20px', textAlign: 'center', backgroundColor: '#fafafa', position: 'relative', cursor: 'pointer', transition: 'all 0.3s' }} className="upload-zone">
+                  <input type="file" multiple accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} />
+                  {uploadingImage ? (
+                    <div style={{ color: '#4a90e2', fontWeight: '500', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <div className="spinner" style={{ width: '24px', height: '24px', border: '3px solid #f3f3f3', borderTop: '3px solid #4a90e2', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                      Uploading images...
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+                      {formData.images.map((img, index) => (
+                        <div key={index} style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
+                          <img src={img} alt="uploaded" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <button type="button" onClick={() => removeImage(index)} style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(255,255,255,0.9)', color: '#ff4d4f', border: 'none', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '12px' }}><FaTimes /></button>
+                        </div>
+                      ))}
+                      {formData.images.length === 0 && (
+                        <div style={{ color: '#888', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', width: '100%' }}>
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#bfbfbf' }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                          <span style={{ fontWeight: '500' }}>Click to upload images</span>
+                          <span style={{ fontSize: '12px' }}>JPG, PNG or GIF</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '25px' }}>
+                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Variants (Color, Size, Stock) *</h3>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '10px' }}>
                   <thead>
-                    <tr>
-                      <th>Color</th>
-                      <th>Size</th>
-                      <th>Stock Quantity</th>
-                      <th>Action</th>
+                    <tr style={{ background: '#f5f5f5', textAlign: 'left' }}>
+                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Color</th>
+                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Size</th>
+                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Stock</th>
+                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd', width: '50px' }}></th>
                     </tr>
                   </thead>
                   <tbody>
                     {formData.variants.map((v, index) => (
-                      <tr key={index}>
-                        <td><input type="text" required value={v.color} onChange={(e) => handleVariantChange(index, 'color', e.target.value)} placeholder="E.g. Red" /></td>
-                        <td><input type="text" required value={v.size} onChange={(e) => handleVariantChange(index, 'size', e.target.value)} placeholder="E.g. XL" /></td>
-                        <td><input type="number" required value={v.stock} onChange={(e) => handleVariantChange(index, 'stock', e.target.value)} /></td>
-                        <td><button type="button" className="delete-btn" onClick={() => removeVariant(index)}><FaTrash /></button></td>
+                      <tr key={index} style={{ borderBottom: '1px solid #eee' }}>
+                        <td style={{ padding: '8px' }}><input type="text" required value={v.color} onChange={(e) => handleVariantChange(index, 'color', e.target.value)} placeholder="E.g. Red" style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px' }} /></td>
+                        <td style={{ padding: '8px' }}><input type="text" required value={v.size} onChange={(e) => handleVariantChange(index, 'size', e.target.value)} placeholder="E.g. XL" style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px' }} /></td>
+                        <td style={{ padding: '8px' }}><input type="number" required value={v.stock} onChange={(e) => handleVariantChange(index, 'stock', e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px' }} /></td>
+                        <td style={{ padding: '8px', textAlign: 'center' }}><button type="button" onClick={() => removeVariant(index)} style={{ background: 'none', border: 'none', color: '#ff4d4f', cursor: 'pointer', fontSize: '16px' }}><FaTrash /></button></td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <button type="button" className="add-variant-btn" onClick={addVariant}><FaPlus /> Add Variant</button>
+                <button type="button" onClick={addVariant} style={{ background: '#f5f5f5', color: '#333', border: '1px solid #ddd', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '5px' }}><FaPlus /> Add Variant</button>
               </div>
 
-              <div className="form-section">
-                <h3>Detailed Attributes</h3>
-                <div className="form-row">
+              <div style={{ marginBottom: '25px' }}>
+                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Detailed Attributes</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
                   <div className="form-group">
-                    <label>Material</label>
-                    <input type="text" value={formData.material} onChange={(e) => setFormData({ ...formData, material: e.target.value })} />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Material</label>
+                    <input type="text" value={formData.material} onChange={(e) => setFormData({ ...formData, material: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group">
-                    <label>Embellishment</label>
-                    <input type="text" value={formData.embellishment} onChange={(e) => setFormData({ ...formData, embellishment: e.target.value })} />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Embellishment</label>
+                    <input type="text" value={formData.embellishment} onChange={(e) => setFormData({ ...formData, embellishment: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group">
-                    <label>Neck</label>
-                    <input type="text" value={formData.neck} onChange={(e) => setFormData({ ...formData, neck: e.target.value })} />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Sleeves</label>
-                    <input type="text" value={formData.sleeves} onChange={(e) => setFormData({ ...formData, sleeves: e.target.value })} />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Neck</label>
+                    <input type="text" value={formData.neck} onChange={(e) => setFormData({ ...formData, neck: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group">
-                    <label>Closure</label>
-                    <input type="text" value={formData.closure} onChange={(e) => setFormData({ ...formData, closure: e.target.value })} />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Sleeves</label>
+                    <input type="text" value={formData.sleeves} onChange={(e) => setFormData({ ...formData, sleeves: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group">
-                    <label>Lining</label>
-                    <input type="text" value={formData.lining} onChange={(e) => setFormData({ ...formData, lining: e.target.value })} />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Wash Care</label>
-                    <input type="text" value={formData.washCare} onChange={(e) => setFormData({ ...formData, washCare: e.target.value })} />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Closure</label>
+                    <input type="text" value={formData.closure} onChange={(e) => setFormData({ ...formData, closure: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group">
-                    <label>Iron Care</label>
-                    <input type="text" value={formData.ironCare} onChange={(e) => setFormData({ ...formData, ironCare: e.target.value })} />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Lining</label>
+                    <input type="text" value={formData.lining} onChange={(e) => setFormData({ ...formData, lining: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
+                  </div>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Wash Care</label>
+                    <input type="text" value={formData.washCare} onChange={(e) => setFormData({ ...formData, washCare: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
+                  </div>
+                  <div className="form-group">
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Iron Care</label>
+                    <input type="text" value={formData.ironCare} onChange={(e) => setFormData({ ...formData, ironCare: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                 </div>
               </div>
 
-              <div className="form-actions sticky-actions">
-                <button type="submit" className="save-btn" disabled={uploadingImage}>
-                  {editingProduct ? "Update Product" : "Save Product"}
-                </button>
-                <button type="button" className="cancel-btn" onClick={handleCloseModal}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px', marginTop: '10px', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+                <button 
+                  type="button" 
+                  onClick={handleCloseModal}
+                  style={{ padding: '10px 20px', background: '#fff', color: '#555', border: '1px solid #d9d9d9', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#4a90e2'; e.currentTarget.style.borderColor = '#4a90e2'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderColor = '#d9d9d9'; }}
+                >
                   Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={uploadingImage}
+                  style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
+                  onMouseOver={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#357abd'; }}
+                  onMouseOut={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#4a90e2'; }}
+                >
+                  {editingProduct ? "Update Product" : "Save Product"}
                 </button>
               </div>
             </form>
@@ -767,56 +779,73 @@ function Product() {
 
       {/* Quick Add Size Modal */}
       {isAddSizeModalOpen && (
-        <div className="modal-overlay" onClick={closeAddSizeModal}>
-          <div className="modal-content form-modal" style={{ maxWidth: '500px' }} onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Quick Add Size</h2>
-              <button className="btn-close" onClick={closeAddSizeModal}>&times;</button>
+        <div className="modal-overlay" onClick={closeAddSizeModal} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '500px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaPlus color="#4a90e2" /> Quick Add Size
+              </h2>
+              <button onClick={closeAddSizeModal} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
             </div>
 
-            <form onSubmit={handleAddSizeSubmit} className="modal-body scrollable-body" style={{ maxHeight: 'calc(100vh - 120px)' }}>
-              <div className="form-section">
-                <h3>Size Details</h3>
-                <div className="form-grid" style={{ gridTemplateColumns: '1fr' }}>
+            <form onSubmit={handleAddSizeSubmit}>
+              <div style={{ marginBottom: '25px' }}>
+                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Size Details</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '15px' }}>
                   <div className="form-group">
-                    <label>Color *</label>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Color *</label>
                     <input
                       type="text"
                       value={addSizeFormData.color}
                       onChange={e => setAddSizeFormData(prev => ({ ...prev, color: e.target.value }))}
                       required
                       placeholder="e.g. Red, Blue, etc."
+                      style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }}
                     />
                   </div>
                   <div className="form-group">
-                    <label>Size *</label>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Size *</label>
                     <input
                       type="text"
                       value={addSizeFormData.size}
                       onChange={e => setAddSizeFormData(prev => ({ ...prev, size: e.target.value }))}
                       required
                       placeholder="e.g. M, L, XL"
+                      style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }}
                     />
                   </div>
                   <div className="form-group">
-                    <label>Stock *</label>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Stock *</label>
                     <input
                       type="number"
                       value={addSizeFormData.stock}
                       onChange={e => setAddSizeFormData(prev => ({ ...prev, stock: e.target.value }))}
                       required
                       min="0"
+                      style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }}
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="form-actions sticky-actions">
-                <button type="submit" className="save-btn" disabled={savingSize}>
-                  {savingSize ? 'Saving...' : 'Save Size'}
-                </button>
-                <button type="button" className="cancel-btn" onClick={closeAddSizeModal}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px', marginTop: '10px', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+                <button 
+                  type="button" 
+                  onClick={closeAddSizeModal}
+                  style={{ padding: '10px 20px', background: '#fff', color: '#555', border: '1px solid #d9d9d9', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#4a90e2'; e.currentTarget.style.borderColor = '#4a90e2'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderColor = '#d9d9d9'; }}
+                >
                   Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={savingSize}
+                  style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: savingSize ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
+                  onMouseOver={(e) => { if(!savingSize) e.currentTarget.style.background = '#357abd'; }}
+                  onMouseOut={(e) => { if(!savingSize) e.currentTarget.style.background = '#4a90e2'; }}
+                >
+                  {savingSize ? 'Saving...' : 'Save Size'}
                 </button>
               </div>
             </form>

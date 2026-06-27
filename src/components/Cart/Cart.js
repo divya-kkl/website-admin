@@ -197,67 +197,67 @@ function Cart() {
 
       {/* View Details Modal */}
       {viewModalCart && (
-        <div className="modal-overlay" onClick={closeViewDetails}>
-          <div className="modal-content view-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Cart Details</h2>
-              <button className="btn-close" onClick={closeViewDetails}>&times;</button>
+        <div className="modal-overlay" onClick={closeViewDetails} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '700px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaEye color="#4a90e2" /> Cart Details
+              </h2>
+              <button onClick={closeViewDetails} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
             </div>
             
-            <div className="modal-body scrollable-body">
-              <div className="view-info-grid">
-                <div><strong>Cart ID:</strong> <span className="id-text">{viewModalCart.id}</span></div>
-                <div><strong>User ID:</strong> <span className="id-text">{viewModalCart.userId}</span></div>
-                <div><strong>Status:</strong> <span className={`status-badge ${getStatusClass(viewModalCart.status)}`}>{viewModalCart.status}</span></div>
-                <div><strong>Last Updated:</strong> {formatDateTime(viewModalCart.updatedAt)}</div>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', fontSize: '15px', color: '#555' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Cart ID:</strong> <span>{viewModalCart.id}</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>User ID:</strong> <span>{viewModalCart.userId}</span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Status:</strong> <span><span className={`status-badge ${getStatusClass(viewModalCart.status)}`}>{viewModalCart.status}</span></span></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px', borderBottom: '1px solid #f0f0f0', paddingBottom: '10px' }}><strong>Last Updated:</strong> <span>{formatDateTime(viewModalCart.updatedAt)}</span></div>
 
-              <div className="view-totals">
-                <div className="total-box">
-                  <span className="total-label">Total Items</span>
-                  <span className="total-value text-blue">{viewModalCart.totalQuantity}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8f9fa', padding: '15px', borderRadius: '8px', border: '1px solid #e9ecef', marginTop: '10px', marginBottom: '10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ fontSize: '13px', color: '#6c757d', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Items</span>
+                  <span style={{ fontSize: '24px', color: '#4a90e2', fontWeight: 'bold' }}>{viewModalCart.totalQuantity}</span>
                 </div>
-                <div className="total-box">
-                  <span className="total-label">Sub Total</span>
-                  <span className="total-value text-green">₹{viewModalCart.subTotal}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ fontSize: '13px', color: '#6c757d', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sub Total</span>
+                  <span style={{ fontSize: '24px', color: '#28a745', fontWeight: 'bold' }}>₹{viewModalCart.subTotal}</span>
                 </div>
               </div>
 
-              <div className="view-section-title">Products in Cart</div>
+              <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block', alignSelf: 'flex-start' }}>Products in Cart</h3>
               
               {viewModalCart.products && viewModalCart.products.length > 0 ? (
-                <div className="cart-products-list">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                   {viewModalCart.products.map((item, idx) => (
-                    <div key={idx} className="cart-product-card">
-                      <div className="cart-product-img">
+                    <div key={idx} style={{ display: 'flex', gap: '15px', padding: '15px', border: '1px solid #eee', borderRadius: '8px', background: '#fff' }}>
+                      <div style={{ width: '80px', height: '80px', flexShrink: 0, borderRadius: '8px', overflow: 'hidden', border: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fafafa' }}>
                         {item.productImage ? (
-                          <img src={item.productImage} alt={item.productName} />
+                          <img src={item.productImage} alt={item.productName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
-                          <div className="img-placeholder"><FaImage /></div>
+                          <FaImage size={30} color="#ccc" />
                         )}
                       </div>
-                      <div className="cart-product-details">
-                        <h4 className="product-name">{item.productName}</h4>
-                        <div className="product-id">ID: {item.productId}</div>
-                        <div className="product-price-row">
-                          <span className="price">₹{item.price}</span>
-                          <span className="mrp">₹{item.mrp}</span>
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <h4 style={{ margin: '0 0 5px 0', fontSize: '16px', color: '#333' }}>{item.productName}</h4>
+                        <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px' }}>ID: {item.productId}</div>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                          <span style={{ fontWeight: '600', color: '#28a745' }}>₹{item.price}</span>
+                          <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '13px' }}>₹{item.mrp}</span>
                         </div>
                       </div>
-                      <div className="cart-product-totals">
-                        <div className="qty-badge">Qty: {item.quantity}</div>
-                        <div className="item-total">₹{item.totalPrice}</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center', gap: '8px' }}>
+                        <div style={{ background: '#eef2f7', color: '#4a5568', padding: '4px 10px', borderRadius: '20px', fontSize: '13px', fontWeight: '600' }}>Qty: {item.quantity}</div>
+                        <div style={{ fontWeight: 'bold', color: '#333', fontSize: '16px' }}>₹{item.totalPrice}</div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="empty-products-msg">This cart is empty.</div>
+                <div style={{ padding: '30px', textAlign: 'center', color: '#888', background: '#f9f9f9', borderRadius: '8px', border: '1px dashed #ddd' }}>This cart is empty.</div>
               )}
             </div>
 
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={closeViewDetails}>Close</button>
+            <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'flex-end', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+              <button onClick={closeViewDetails} style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }} onMouseOver={(e) => e.currentTarget.style.background = '#357abd'} onMouseOut={(e) => e.currentTarget.style.background = '#4a90e2'}>Close</button>
             </div>
           </div>
         </div>

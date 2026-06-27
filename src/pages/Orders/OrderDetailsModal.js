@@ -25,11 +25,13 @@ function OrderDetailsModal({ order, onClose }) {
   };
 
   return (
-    <div className="od-modal-overlay" onClick={onClose}>
-      <div className="od-modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="od-modal-header">
-          <h2>Order Details</h2>
-          <button className="od-close-icon" onClick={onClose}><FaTimes /></button>
+    <div className="od-modal-overlay" onClick={onClose} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+      <div className="od-modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '800px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+        <div className="od-modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+          <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+             Order Details
+          </h2>
+          <button className="od-close-icon" onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}><FaTimes /></button>
         </div>
         
         <div className="od-modal-body">
@@ -121,8 +123,8 @@ function OrderDetailsModal({ order, onClose }) {
           </div>
         </div>
 
-        <div className="od-modal-footer">
-          <button className="od-close-btn" onClick={onClose}>Close</button>
+        <div className="od-modal-footer" style={{ marginTop: '25px', display: 'flex', justifyContent: 'flex-end', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+          <button className="od-close-btn" onClick={onClose} style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }} onMouseOver={(e) => e.currentTarget.style.background = '#357abd'} onMouseOut={(e) => e.currentTarget.style.background = '#4a90e2'}>Close</button>
         </div>
       </div>
     </div>
