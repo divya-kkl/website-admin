@@ -68,7 +68,6 @@ const DELETE_ORDER = gql`
 `;
 
 function Orders() {
-  const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -84,14 +83,12 @@ function Orders() {
   
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [editingImage, setEditingImage] = useState(null);
-  const [editingStatus, setEditingStatus] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
       const data = await client.request(GET_ALL_ORDERS, { search: searchTerm, page, limit });
-      setOrders(data.getAllOrders?.orders || []);
       setFilteredOrders(data.getAllOrders?.orders || []);
       setTotalCount(data.getAllOrders?.totalCount || 0);
       setError(null);
@@ -111,6 +108,7 @@ function Orders() {
       fetchOrders();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page]);
 
   if (error) return <div className="orders-error">Error loading orders: {error.message}</div>;
@@ -149,6 +147,7 @@ function Orders() {
     }
   };
 
+
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this order?")) {
       try {
@@ -169,6 +168,7 @@ function Orders() {
 
   const openEditModal = (order) => {
     setEditModalOrder(order);
+    setEditingImage(order.image || null);
     setOpenDropdownId(null);
   };
 
@@ -379,45 +379,104 @@ function Orders() {
       )}
 
       {editModalOrder && (
-        <div className="modal-overlay" onClick={() => setEditModalOrder(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.4)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000 }}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '8px', padding: '30px', width: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
-            <h3 style={{ margin: '0 0 20px 0', fontSize: '20px', color: '#000', fontFamily: "'Times New Roman', Times, serif" }}>
-              Update Order Status
-            </h3>
-            <div>
-              <select 
-                style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '14px', marginBottom: '20px', fontFamily: "sans-serif" }}
-                value={editModalOrder.status || 'PENDING'}
-                onChange={(e) => {
-                  setEditModalOrder({...editModalOrder, status: e.target.value});
-                }}
-              >
-                <option value="PENDING">PENDING</option>
-                <option value="SHIPPED">SHIPPED</option>
-                <option value="DELIVERED">DELIVERED</option>
-                <option value="CANCELLED">CANCELLED</option>
-              </select>
+        <div className="modal-overlay" onClick={() => { setEditModalOrder(null); setEditingImage(null); }} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '450px', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
+              <h3 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FaEdit color="#4a90e2" /> Update Order Status
+              </h3>
+              <button onClick={() => { setEditModalOrder(null); setEditingImage(null); }} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div className="form-group">
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Order Status</label>
+                <select 
+                  style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #e0e0e0', fontSize: '15px', color: '#333', backgroundColor: '#f9f9f9', outline: 'none', transition: 'border-color 0.3s' }}
+                  value={editModalOrder.status || 'PENDING'}
+                  onChange={(e) => setEditModalOrder({...editModalOrder, status: e.target.value})}
+                >
+                  <option value="PENDING">PENDING</option>
+                  <option value="SHIPPED">SHIPPED</option>
+                  <option value="DELIVERED">DELIVERED</option>
+                  <option value="CANCELLED">CANCELLED</option>
+                </select>
+              </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+              <div className="form-group">
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Upload Proof (Optional)</label>
+                <div style={{ border: '2px dashed #d9d9d9', borderRadius: '8px', padding: '20px', textAlign: 'center', backgroundColor: '#fafafa', position: 'relative', cursor: 'pointer', transition: 'all 0.3s' }} className="upload-zone">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleImageUpload} 
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                    disabled={uploadingImage}
+                  />
+                  {uploadingImage ? (
+                    <div style={{ color: '#4a90e2', fontWeight: '500', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <div className="spinner" style={{ width: '24px', height: '24px', border: '3px solid #f3f3f3', borderTop: '3px solid #4a90e2', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                      Uploading image...
+                    </div>
+                  ) : editingImage ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <img src={editingImage} alt="Proof" style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '6px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
+                      <span style={{ color: '#666', fontSize: '13px' }}>Click or drag to replace image</span>
+                    </div>
+                  ) : (
+                    <div style={{ color: '#888', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#bfbfbf' }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                      <span style={{ fontWeight: '500' }}>Click to upload an image</span>
+                      <span style={{ fontSize: '12px' }}>JPG, PNG or GIF (Max. 5MB)</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px', marginTop: '10px', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
+                <button 
+                  onClick={() => {
+                    setEditModalOrder(null);
+                    setEditingImage(null);
+                  }} 
+                  style={{ padding: '10px 20px', background: '#fff', color: '#555', border: '1px solid #d9d9d9', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#4a90e2'; e.currentTarget.style.borderColor = '#4a90e2'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderColor = '#d9d9d9'; }}
+                >
+                  Cancel
+                </button>
                 <button 
                   onClick={() => {
                     handleStatusChange(editModalOrder.id, editModalOrder.status, editingImage);
                     setEditModalOrder(null);
+                    setEditingImage(null);
                   }}
                   disabled={uploadingImage}
-                  style={{ padding: '10px 20px', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', fontFamily: "sans-serif" }}
+                  style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
+                  onMouseOver={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#357abd'; }}
+                  onMouseOut={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#4a90e2'; }}
                 >
-                  Update Status
-                </button>
-                <button 
-                  onClick={() => setEditModalOrder(null)} 
-                  style={{ padding: '10px 20px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', fontFamily: "sans-serif" }}
-                >
-                  Cancel
+                  Save Changes
                 </button>
               </div>
             </div>
           </div>
+          <style>
+            {`
+              @keyframes slideIn {
+                from { transform: translateY(-20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+              }
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+              .upload-zone:hover {
+                border-color: #4a90e2 !important;
+                background-color: #f4f8fd !important;
+              }
+            `}
+          </style>
         </div>
       )}
     </div>

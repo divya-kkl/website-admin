@@ -9,6 +9,7 @@ import Categories from './components/ProductCategories/Categories';
 import Product from './components/Product/Product';
 import Cart from './components/Cart/Cart';
 import User from './components/User/User';
+import ShopUser from './components/ShopUser/ShopUser';
 import Banner from './components/Banner/Banner';
 import TopBanner from './components/TopBanner/TopBanner';
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="products" element={<main className="dashboard-main"><Product /></main>} />
           <Route path="carts" element={<main className="dashboard-main"><Cart /></main>} />
           <Route path="users" element={<main className="dashboard-main"><User /></main>} />
+          <Route path="shopusers" element={<main className="dashboard-main"><ShopUser /></main>} />
           <Route path="banners/first" element={<main className="dashboard-main"><Banner bannerType="FIRST" title="First Banner" /></main>} />
           <Route path="banners/second" element={<main className="dashboard-main"><Banner bannerType="SECOND" title="Second Banner" /></main>} />
           <Route path="banners/third" element={<main className="dashboard-main"><Banner bannerType="THIRD" title="Third Banner" /></main>} />

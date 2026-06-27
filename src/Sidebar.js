@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaHome, FaBox, FaTags, FaBoxOpen, FaShoppingCart, FaUsers, FaImages, FaCaretDown, FaCaretUp } from 'react-icons/fa';
+import { FaHome, FaTags, FaBoxOpen, FaShoppingCart, FaUsers, FaImages, FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import './Sidebar.css';
 
 function Sidebar() {
@@ -29,6 +29,9 @@ function Sidebar() {
         </NavLink>
         <NavLink to="/dashboard/users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
           <FaUsers className="nav-icon" /> Users
+        </NavLink>
+        <NavLink to="/dashboard/shopusers" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+          <FaUsers className="nav-icon" /> Shop Users
         </NavLink>
         <NavLink to="/dashboard/top-banners" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
           <FaImages className="nav-icon" /> Top Banners

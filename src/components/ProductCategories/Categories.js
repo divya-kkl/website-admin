@@ -53,7 +53,6 @@ const DELETE_CATEGORY = gql`
 `;
 
 function Categories() {
-  const [categories, setCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -94,7 +93,6 @@ function Categories() {
     try {
       setLoading(true);
       const data = await client.request(GET_ALL_CATEGORIES, { search: searchTerm, page, limit });
-      setCategories(data.getAllProductCategories?.categories || []);
       setFilteredCategories(data.getAllProductCategories?.categories || []);
       setTotalCount(data.getAllProductCategories?.totalCount || 0);
       setError(null);
@@ -114,6 +112,7 @@ function Categories() {
       fetchCategories();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page]);
 
   const handleImageUpload = async (e) => {
