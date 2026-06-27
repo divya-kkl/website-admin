@@ -68,7 +68,6 @@ const DELETE_USER = gql`
 `;
 
 function User() {
-  const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   
   const [loading, setLoading] = useState(true);
@@ -102,7 +101,6 @@ function User() {
     try {
       setLoading(true);
       const data = await client.request(GET_ALL_USERS, { search: searchTerm, page, limit });
-      setUsers(data.getAllUser?.users || []);
       setFilteredUsers(data.getAllUser?.users || []);
       setTotalCount(data.getAllUser?.totalCount || 0);
       setError(null);
@@ -122,6 +120,7 @@ function User() {
       fetchUsers();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page]);
 
   const handleOpenModal = (user = null) => {
