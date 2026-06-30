@@ -10,6 +10,16 @@ const client = new GraphQLClient(GRAPHQL_ENDPOINT, {
   }
 });
 
+const GET_ALL_BRANDS = gql`
+  query {
+    getAllBrands {
+      id
+      name
+      status
+    }
+  }
+`;
+
 const GET_ALL_PRODUCTS = gql`
   query GetAllProducts($search: String, $page: Int, $limit: Int) {
     getAllProducts(search: $search, page: $page, limit: $limit) {
@@ -88,6 +98,7 @@ const ADD_PRODUCT_SIZE = gql`
 
 function Product() {
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -136,10 +147,14 @@ function Product() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await client.request(GET_ALL_PRODUCTS, { search: searchTerm, page, limit });
-      setFilteredProducts(data.getAllProducts?.products || []);
-      setCategories(data.getAllProducts?.categories || []);
-      setTotalCount(data.getAllProducts?.totalCount || 0);
+      const [productData, brandData] = await Promise.all([
+        client.request(GET_ALL_PRODUCTS, { search: searchTerm, page, limit }),
+        client.request(GET_ALL_BRANDS)
+      ]);
+      setFilteredProducts(productData.getAllProducts?.products || []);
+      setCategories(productData.getAllProducts?.categories || []);
+      setTotalCount(productData.getAllProducts?.totalCount || 0);
+      setBrands(brandData.getAllBrands?.filter(b => b.status === 'ACTIVE') || []);
       setError(null);
     } catch (err) {
       setError(err);
@@ -619,8 +634,8 @@ function Product() {
                     <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="E.g. Cotton T-Shirt" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Brand *</label>
-                    <input type="text" required value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})} placeholder="E.g. Nike" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Brand</label>
+                    <input type="text" value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})} placeholder="E.g. Nike" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
                   </div>
                   <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', gridColumn: '1 / -1' }}>
                     <input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})} id="isFeatured" style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
