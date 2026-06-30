@@ -601,178 +601,225 @@ function Product() {
 
       {/* Add / Edit Form Modal */}
       {isModalOpen && (
-        <div className="modal-overlay" onClick={handleCloseModal} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 3000, backdropFilter: 'blur(4px)' }}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: '12px', padding: '30px', width: '800px', maxWidth: '90vw', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideIn 0.3s ease-out' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '1px solid #f0f0f0', paddingBottom: '15px' }}>
-              <h2 style={{ margin: 0, fontSize: '22px', color: '#333', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <FaEdit color="#4a90e2" /> {editingProduct ? "Edit Product" : "Add New Product"}
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="pf-modal" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="pf-modal-header">
+              <h2>
+                <span className="header-icon"><FaEdit /></span>
+                {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h2>
-              <button onClick={handleCloseModal} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999', transition: 'color 0.2s' }}>&times;</button>
+              <button className="pf-close-btn" onClick={handleCloseModal}><FaTimes /></button>
             </div>
 
-            <form onSubmit={handleSave}>
-              <div style={{ marginBottom: '25px' }}>
-                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Basic Information</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Product Name *</label>
-                    <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="E.g. Cotton T-Shirt" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Brand *</label>
-                    <input type="text" required value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})} placeholder="E.g. Nike" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', gridColumn: '1 / -1' }}>
-                    <input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})} id="isFeatured" style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
-                    <label htmlFor="isFeatured" style={{ marginBottom: 0, cursor: 'pointer', fontWeight: '500', color: '#555', fontSize: '14px' }}>Featured Product</label>
-                  </div>
-                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Category *</label>
-                    <select required value={formData.productCategoriesID} onChange={handleCategoryChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px', backgroundColor: '#fff' }}>
-                      <option value="">Select Category</option>
-                      {categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name} ({cat.code})</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Description</label>
-                    <textarea rows="3" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Product description..." style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px', resize: 'vertical' }}></textarea>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '25px' }}>
-                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Pricing</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Price (₹) *</label>
-                    <input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>MRP (₹) *</label>
-                    <input type="number" required value={formData.mrp} onChange={(e) => setFormData({ ...formData, mrp: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Discount (%)</label>
-                    <input type="number" value={formData.discountPercentage} onChange={(e) => setFormData({ ...formData, discountPercentage: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '25px' }}>
-                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Images</h3>
-                <div style={{ border: '2px dashed #d9d9d9', borderRadius: '8px', padding: '20px', textAlign: 'center', backgroundColor: '#fafafa', position: 'relative', cursor: 'pointer', transition: 'all 0.3s' }} className="upload-zone">
-                  <input type="file" multiple accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} />
-                  {uploadingImage ? (
-                    <div style={{ color: '#4a90e2', fontWeight: '500', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                      <div className="spinner" style={{ width: '24px', height: '24px', border: '3px solid #f3f3f3', borderTop: '3px solid #4a90e2', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-                      Uploading images...
+            {/* Body */}
+            <div className="pf-modal-body">
+              <form id="product-form" onSubmit={handleSave}>
+                {/* ── Basic Information ── */}
+                <div className="pf-section">
+                  <p className="pf-section-title">
+                    <span className="section-icon">📋</span>
+                    Basic Information
+                  </p>
+                  <div className="pf-grid-2">
+                    <div className="pf-field">
+                      <label className="pf-label">Product Name *</label>
+                      <input className="pf-input" type="text" required value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="E.g. Cotton T-Shirt" />
                     </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
-                      {formData.images.map((img, index) => (
-                        <div key={index} style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
-                          <img src={img} alt="uploaded" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          <button type="button" onClick={() => removeImage(index)} style={{ position: 'absolute', top: '2px', right: '2px', background: 'rgba(255,255,255,0.9)', color: '#ff4d4f', border: 'none', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '12px' }}><FaTimes /></button>
-                        </div>
-                      ))}
-                      {formData.images.length === 0 && (
-                        <div style={{ color: '#888', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', width: '100%' }}>
-                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#bfbfbf' }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                          <span style={{ fontWeight: '500' }}>Click to upload images</span>
-                          <span style={{ fontSize: '12px' }}>JPG, PNG or GIF</span>
-                        </div>
-                      )}
+                    <div className="pf-field">
+                      <label className="pf-label">Brand *</label>
+                      <input className="pf-input" type="text" required value={formData.brand}
+                        onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                        placeholder="E.g. Nike" />
                     </div>
-                  )}
+                    <div className="pf-field pf-full">
+                      <label className="pf-label">Category *</label>
+                      <select className="pf-select" required value={formData.productCategoriesID} onChange={handleCategoryChange}>
+                        <option value="">Select a Category</option>
+                        {categories.map(cat => (
+                          <option key={cat.id} value={cat.id}>{cat.name} ({cat.code})</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="pf-field pf-full">
+                      <label className="pf-label">Description</label>
+                      <textarea className="pf-textarea" rows="3" value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="Describe the product..."></textarea>
+                    </div>
+                    <div className="pf-full">
+                      <label className="pf-featured-row" htmlFor="isFeatured">
+                        <input type="checkbox" id="isFeatured" checked={formData.isFeatured}
+                          onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })} />
+                        ⭐ Mark as Featured Product
+                      </label>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div style={{ marginBottom: '25px' }}>
-                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Variants (Color, Size, Stock) *</h3>
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '10px' }}>
-                  <thead>
-                    <tr style={{ background: '#f5f5f5', textAlign: 'left' }}>
-                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Color</th>
-                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Size</th>
-                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd' }}>Stock</th>
-                      <th style={{ padding: '10px', borderBottom: '2px solid #ddd', width: '50px' }}></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {formData.variants.map((v, index) => (
-                      <tr key={index} style={{ borderBottom: '1px solid #eee' }}>
-                        <td style={{ padding: '8px' }}><input type="text" required value={v.color} onChange={(e) => handleVariantChange(index, 'color', e.target.value)} placeholder="E.g. Red" style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px' }} /></td>
-                        <td style={{ padding: '8px' }}><input type="text" required value={v.size} onChange={(e) => handleVariantChange(index, 'size', e.target.value)} placeholder="E.g. XL" style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px' }} /></td>
-                        <td style={{ padding: '8px' }}><input type="number" required value={v.stock} onChange={(e) => handleVariantChange(index, 'stock', e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px' }} /></td>
-                        <td style={{ padding: '8px', textAlign: 'center' }}><button type="button" onClick={() => removeVariant(index)} style={{ background: 'none', border: 'none', color: '#ff4d4f', cursor: 'pointer', fontSize: '16px' }}><FaTrash /></button></td>
+                {/* ── Pricing ── */}
+                <div className="pf-section">
+                  <p className="pf-section-title">
+                    <span className="section-icon">💰</span>
+                    Pricing
+                  </p>
+                  <div className="pf-grid-3">
+                    <div className="pf-field">
+                      <label className="pf-label">Selling Price (₹) *</label>
+                      <input className="pf-input" type="number" required min="0" value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        placeholder="0" />
+                    </div>
+                    <div className="pf-field">
+                      <label className="pf-label">MRP (₹) *</label>
+                      <input className="pf-input" type="number" required min="0" value={formData.mrp}
+                        onChange={(e) => setFormData({ ...formData, mrp: e.target.value })}
+                        placeholder="0" />
+                    </div>
+                    <div className="pf-field">
+                      <label className="pf-label">Discount (%)</label>
+                      <input className="pf-input" type="number" min="0" max="100" value={formData.discountPercentage}
+                        onChange={(e) => setFormData({ ...formData, discountPercentage: e.target.value })}
+                        placeholder="0" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Product Images ── */}
+                <div className="pf-section">
+                  <p className="pf-section-title">
+                    <span className="section-icon">🖼️</span>
+                    Product Images
+                  </p>
+                  <div className="pf-images-row">
+                    {/* Main Image Container */}
+                    <div className="pf-main-img-col">
+                      <span className="pf-upload-label">Main Image *</span>
+                      <div className="pf-upload-zone">
+                        <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} />
+                        <div className="pf-main-upload-inner">
+                          {uploadingImage && formData.images.length === 0 ? (
+                            <><div className="pf-spinner"></div><span style={{ color: '#3b82f6', fontSize: '13px', fontWeight: 600 }}>Uploading...</span></>
+                          ) : formData.images.length > 0 ? (
+                            <div className="pf-main-img-preview">
+                              <img src={formData.images[0]} alt="Main" />
+                              <button type="button" className="pf-remove-btn" onClick={() => removeImage(0)}><FaTimes /></button>
+                            </div>
+                          ) : (
+                            <div className="pf-upload-placeholder">
+                              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                              <span>Click to upload</span>
+                              <small>Single main image</small>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Side Images Container */}
+                    <div className="pf-side-img-col">
+                      <span className="pf-upload-label">Side / Gallery Images</span>
+                      <div className="pf-upload-zone">
+                        <input type="file" multiple accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} />
+                        <div className="pf-side-upload-inner">
+                          {uploadingImage && formData.images.length > 0 ? (
+                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 160 }}>
+                              <div className="pf-spinner"></div>
+                              <span style={{ color: '#3b82f6', fontSize: '13px', fontWeight: 600 }}>Uploading...</span>
+                            </div>
+                          ) : (
+                            <>
+                              {formData.images.slice(1).map((img, index) => (
+                                <div key={index + 1} className="pf-side-img-thumb">
+                                  <img src={img} alt={`Side ${index + 1}`} />
+                                  <button type="button" className="pf-remove-btn" onClick={() => removeImage(index + 1)}><FaTimes /></button>
+                                </div>
+                              ))}
+                              <div className="pf-add-more-box">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                {formData.images.length > 1 ? 'Add More' : 'Upload Images'}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Variants ── */}
+                <div className="pf-section">
+                  <p className="pf-section-title">
+                    <span className="section-icon">🎨</span>
+                    Variants (Color, Size, Stock) *
+                  </p>
+                  <table className="pf-variants-table">
+                    <thead>
+                      <tr>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Stock</th>
+                        <th style={{ width: 48 }}></th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <button type="button" onClick={addVariant} style={{ background: '#f5f5f5', color: '#333', border: '1px solid #ddd', padding: '8px 15px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '5px' }}><FaPlus /> Add Variant</button>
-              </div>
+                    </thead>
+                    <tbody>
+                      {formData.variants.map((v, index) => (
+                        <tr key={index}>
+                          <td><input className="pf-var-input" type="text" required value={v.color}
+                            onChange={(e) => handleVariantChange(index, 'color', e.target.value)} placeholder="E.g. Red" /></td>
+                          <td><input className="pf-var-input" type="text" required value={v.size}
+                            onChange={(e) => handleVariantChange(index, 'size', e.target.value)} placeholder="E.g. XL" /></td>
+                          <td><input className="pf-var-input" type="number" required value={v.stock}
+                            onChange={(e) => handleVariantChange(index, 'stock', e.target.value)} placeholder="0" /></td>
+                          <td><button type="button" className="pf-del-btn" onClick={() => removeVariant(index)}><FaTrash /></button></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <button type="button" className="pf-add-variant-btn" onClick={addVariant}>
+                    <FaPlus /> Add Variant
+                  </button>
+                </div>
 
-              <div style={{ marginBottom: '25px' }}>
-                <h3 style={{ fontSize: '16px', color: '#4a90e2', marginBottom: '15px', borderBottom: '2px solid #4a90e2', paddingBottom: '5px', display: 'inline-block' }}>Detailed Attributes</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Material</label>
-                    <input type="text" value={formData.material} onChange={(e) => setFormData({ ...formData, material: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Embellishment</label>
-                    <input type="text" value={formData.embellishment} onChange={(e) => setFormData({ ...formData, embellishment: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Neck</label>
-                    <input type="text" value={formData.neck} onChange={(e) => setFormData({ ...formData, neck: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Sleeves</label>
-                    <input type="text" value={formData.sleeves} onChange={(e) => setFormData({ ...formData, sleeves: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Closure</label>
-                    <input type="text" value={formData.closure} onChange={(e) => setFormData({ ...formData, closure: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Lining</label>
-                    <input type="text" value={formData.lining} onChange={(e) => setFormData({ ...formData, lining: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Wash Care</label>
-                    <input type="text" value={formData.washCare} onChange={(e) => setFormData({ ...formData, washCare: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
-                  </div>
-                  <div className="form-group">
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555', fontSize: '14px' }}>Iron Care</label>
-                    <input type="text" value={formData.ironCare} onChange={(e) => setFormData({ ...formData, ironCare: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #e0e0e0', fontSize: '14px' }} />
+                {/* ── Detailed Attributes ── */}
+                <div className="pf-section">
+                  <p className="pf-section-title">
+                    <span className="section-icon">📝</span>
+                    Detailed Attributes
+                  </p>
+                  <div className="pf-grid-3">
+                    {[
+                      { label: 'Material', key: 'material', placeholder: 'E.g. Cotton' },
+                      { label: 'Embellishment', key: 'embellishment', placeholder: 'E.g. Embroidery' },
+                      { label: 'Neck', key: 'neck', placeholder: 'E.g. Round Neck' },
+                      { label: 'Sleeves', key: 'sleeves', placeholder: 'E.g. Full Sleeves' },
+                      { label: 'Closure', key: 'closure', placeholder: 'E.g. Zip' },
+                      { label: 'Lining', key: 'lining', placeholder: 'E.g. Lined' },
+                      { label: 'Wash Care', key: 'washCare', placeholder: 'E.g. Hand Wash' },
+                      { label: 'Iron Care', key: 'ironCare', placeholder: 'E.g. Medium Heat' },
+                    ].map(({ label, key, placeholder }) => (
+                      <div key={key} className="pf-field">
+                        <label className="pf-label">{label}</label>
+                        <input className="pf-input" type="text" value={formData[key]}
+                          onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
+                          placeholder={placeholder} />
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '15px', marginTop: '10px', paddingTop: '20px', borderTop: '1px solid #f0f0f0' }}>
-                <button 
-                  type="button" 
-                  onClick={handleCloseModal}
-                  style={{ padding: '10px 20px', background: '#fff', color: '#555', border: '1px solid #d9d9d9', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '14px', transition: 'all 0.2s' }}
-                  onMouseOver={(e) => { e.currentTarget.style.color = '#4a90e2'; e.currentTarget.style.borderColor = '#4a90e2'; }}
-                  onMouseOut={(e) => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderColor = '#d9d9d9'; }}
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  disabled={uploadingImage}
-                  style={{ padding: '10px 24px', background: '#4a90e2', color: 'white', border: 'none', borderRadius: '6px', cursor: uploadingImage ? 'not-allowed' : 'pointer', fontWeight: '500', fontSize: '14px', transition: 'background 0.2s', boxShadow: '0 2px 6px rgba(74, 144, 226, 0.3)' }}
-                  onMouseOver={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#357abd'; }}
-                  onMouseOut={(e) => { if(!uploadingImage) e.currentTarget.style.background = '#4a90e2'; }}
-                >
-                  {editingProduct ? "Update Product" : "Save Product"}
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
+
+            {/* Footer */}
+            <div className="pf-modal-footer">
+              <button type="button" className="pf-cancel-btn" onClick={handleCloseModal}>Cancel</button>
+              <button type="submit" form="product-form" className="pf-save-btn" disabled={uploadingImage}>
+                {uploadingImage ? 'Uploading...' : editingProduct ? '✓ Update Product' : '+ Save Product'}
+              </button>
+            </div>
           </div>
         </div>
       )}
