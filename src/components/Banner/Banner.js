@@ -71,6 +71,7 @@ function Banner({ bannerType, title }) {
 
   useEffect(() => {
     fetchBanners();
+
   }, [bannerType]);
 
   const handleOpenModal = (banner = null) => {
