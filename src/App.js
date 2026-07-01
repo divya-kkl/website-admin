@@ -13,6 +13,7 @@ import ShopUser from './components/ShopUser/ShopUser';
 import Banner from './components/Banner/Banner';
 import TopBanner from './components/TopBanner/TopBanner';
 import DeliveryCharger from './components/DeliveryCharger/DeliveryCharger';
+import FAQ from './components/FAQ/FAQ';
 
 const PrivateRoute = ({ children }) => {
   // Check if token exists or user is logged in
@@ -51,6 +52,7 @@ function App() {
           <Route path="banners/third" element={<main className="dashboard-main"><Banner bannerType="THIRD" title="Third Banner" /></main>} />
           <Route path="top-banners" element={<main className="dashboard-main"><TopBanner /></main>} />
           <Route path="delivery-charger" element={<main className="dashboard-main"><DeliveryCharger /></main>} />
+          <Route path="faqs" element={<main className="dashboard-main"><FAQ /></main>} />
         </Route>
       </Routes>
     </BrowserRouter>

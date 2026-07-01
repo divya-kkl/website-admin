@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaHome, FaTags, FaBoxOpen, FaShoppingCart, FaUsers, FaImages, FaCaretDown, FaCaretUp, FaTruck } from 'react-icons/fa';
+import { FaHome, FaTags, FaBoxOpen, FaShoppingCart, FaUsers, FaImages, FaCaretDown, FaCaretUp, FaTruck, FaQuestionCircle } from 'react-icons/fa';
 import './Sidebar.css';
 
 function Sidebar() {
@@ -38,6 +38,9 @@ function Sidebar() {
         </NavLink>
         <NavLink to="/dashboard/delivery-charger" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
           <FaTruck className="nav-icon" /> Delivery Charger
+        </NavLink>
+        <NavLink to="/dashboard/faqs" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+          <FaQuestionCircle className="nav-icon" /> FAQs
         </NavLink>
         
         <div className="nav-group">
